@@ -7,10 +7,10 @@ using WebAPI.Services;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        private IAccountRepo _accountRepo;
+        private readonly IAccountRepo _accountRepo;
 
         public AccountController(IAccountRepo accountRepo)
         {
@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             try
             {
                 var added = await _accountRepo.PostAccountAsync(account);
-                return Created($"/{added.AccountName}", added);
+                return Created($"/{added.Username}", added);
             }
             catch (Exception e)
             {
@@ -37,8 +37,8 @@ namespace WebAPI.Controllers
         }
         
         [HttpGet]
-        [Route("{id:int}")]
-        public async Task<ActionResult<Account>> GetAccountAsync([FromRoute] int id)
+        [Route("{username}")]
+        public async Task<ActionResult<Account>> GetAccountAsync([FromRoute] string username)
         {
             if (!ModelState.IsValid)
             {
