@@ -5,7 +5,7 @@ namespace WebAPI.Services
 {
     public interface IAccountRepo
     {
-        Task<Account> GetAccountAsync();
         Task<Account> PostAccountAsync(Account account);
+        Task<Account> GetAccountAsync();
     }
 }
