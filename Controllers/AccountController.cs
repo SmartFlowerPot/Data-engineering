@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             try
             {
                 var added = await _accountRepo.PostAccountAsync(account);
-                return Created($"/{added.AccountName}", added);
+                return Created($"/{added.Username}", added);
             }
             catch (Exception e)
             {
