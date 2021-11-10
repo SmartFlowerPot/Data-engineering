@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.exceptions;
 using WebAPI.Models;
 using WebAPI.Services;
 
@@ -31,8 +32,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return StatusCode(500, e.Message);
+                return HandleException(e.Message);
             }
         }
         
@@ -46,14 +46,52 @@ namespace WebAPI.Controllers
             }
             try
             {
-                var account = await _accountRepo.GetAccountAsync();
+                var account = await _accountRepo.GetAccountAsync(username);
                 return Ok(account);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return StatusCode(500, e.Message);
+                return HandleException(e.Message);
             }
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult<Account>> GetAccountAsync([FromQuery] string username, [FromQuery] string password)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var account = await _accountRepo.GetAccountAsync(username, password);
+                return Ok(account);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e.Message);
+            }
+        }
+
+        private ActionResult<Account> HandleException(string message)
+        {
+            Console.WriteLine($"ACCOUNT CONTROLLER: {message}");
+            switch (message)
+            {
+                case Status.UserNotFound:
+                {
+                    return NotFound(message);
+                }
+                case Status.IncorrectPassword:
+                {
+                    return BadRequest(message);
+                }
+                case Status.UserAlreadyExists:
+                {
+                    return Conflict(message);
+                }
+            }
+            return StatusCode(500, message); 
         }
     }
 }

@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
+using WebAPI.exceptions;
 using WebAPI.Models;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace WebAPI.Services
 {
@@ -10,22 +14,46 @@ namespace WebAPI.Services
     {
         public async Task<Account> PostAccountAsync(Account account)
         {
-            using (var database = new Database())
-            {
-                Account first = await database.Accounts.FirstOrDefaultAsync(u => u.Username.Equals(account.Username));
+            await using var database = new Database();
+            var first = await database.Accounts.FirstOrDefaultAsync(u => u.Username.Equals(account.Username));
 
-                if (first != null) throw new Exception("Username already register. Choose another username or login with your account.");
+            if (first != null) throw new Exception(Status.UserAlreadyExists);
 
-                await database.Accounts.AddAsync(account);
-                await database.SaveChangesAsync();
-            }
+            await database.Accounts.AddAsync(account);
+            await database.SaveChangesAsync();
 
             return account;
         }
 
-        public Task<Account> GetAccountAsync()
+        public async Task<Account> GetAccountAsync(string username)
         {
-            throw new NotImplementedException();
+            await using var database = new Database();
+            
+            var first = await database.Accounts.FirstOrDefaultAsync
+                (u => u.Username.Equals(username));
+            if (first == null)
+            { 
+                throw new Exception(Status.UserNotFound);
+            }
+            return first;
+        }
+
+        public async Task<Account> GetAccountAsync(string username, string password)
+        {
+            await using var database = new Database();
+            
+            var first = await database.Accounts.FirstOrDefaultAsync
+                (u => u.Username.Equals(username));
+            if (first == null)
+            { 
+               throw new Exception(Status.UserNotFound);
+            }
+            if (!first.Password.Equals(password))
+            {
+                throw new Exception(Status.IncorrectPassword);
+            }
+            return first;
         }
     }
+    
 }
