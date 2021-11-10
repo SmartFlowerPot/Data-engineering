@@ -19,4 +19,20 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Exceptions\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Exceptions\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Exceptions\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Exceptions\**" />
+    </ItemGroup>
+
 </Project>
