@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Exceptions
+﻿using System;
+
+namespace WebAPI.Exceptions
 {
     public static class Status
     {
