@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
-using WebAPI.exceptions;
+using WebAPI.Exceptions;
 using WebAPI.Models;
 
 namespace WebAPI.Persistence

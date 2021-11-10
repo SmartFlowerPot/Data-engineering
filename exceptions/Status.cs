@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WebAPI.exceptions
+﻿namespace WebAPI.Exceptions
 {
     public static class Status
     {

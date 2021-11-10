@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.exceptions;
+using WebAPI.Exceptions;
 using WebAPI.Models;
 using WebAPI.Services;
 
