@@ -6,6 +6,7 @@ namespace WebAPI.DataAccess
     public class Database : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Temperature> Temperatures { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

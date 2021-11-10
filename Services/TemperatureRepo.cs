@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
 using WebAPI.Models;
 
@@ -7,20 +9,18 @@ namespace WebAPI.Services
 {
     public class TemperatureRepo: ITemperatureRepo
     {
-        private DbContext DbContext;
+        private Database database;
         
-        public TemperatureRepo(DbContext dbContext)
+        public TemperatureRepo(Database dbContext)
         {
-            DbContext = dbContext;
+            database = dbContext;
         }
         
         public async Task<Temperature> GetTemperatureAsync()
         {
             try
             {
-                //Temperature t = await DbContext.
-                //return Ok(t);
-                Temperature t = new Temperature();
+                Temperature t = await database.Temperatures.LastOrDefaultAsync();
                 return t;
             }
             catch (Exception e)
