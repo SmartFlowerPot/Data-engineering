@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
 using WebAPI.exceptions;
 using WebAPI.Models;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
-namespace WebAPI.Services
+namespace WebAPI.Persistence
 {
     public class AccountRepo: IAccountRepo
     {

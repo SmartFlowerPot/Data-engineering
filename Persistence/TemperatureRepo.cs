@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
 using WebAPI.Models;
 
-namespace WebAPI.Services
+namespace WebAPI.Persistence
 {
     public class TemperatureRepo: ITemperatureRepo
     {

@@ -3,7 +3,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    public interface ITemperatureRepo
+    public interface ITemperatureService
     {
         Task<Temperature> GetTemperatureAsync();
     }

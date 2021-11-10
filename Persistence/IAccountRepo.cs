@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using WebAPI.Models;
 
-namespace WebAPI.Services
+namespace WebAPI.Persistence
 {
     public interface IAccountRepo
     {
