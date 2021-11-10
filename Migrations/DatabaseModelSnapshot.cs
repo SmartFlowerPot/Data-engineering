@@ -31,6 +31,19 @@ namespace WebAPI.Migrations
 
                     b.ToTable("Accounts");
                 });
+
+            modelBuilder.Entity("WebAPI.Models.Temperature", b =>
+                {
+                    b.Property<string>("TimeStamp")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("TemperatureInDegrees")
+                        .HasColumnType("float");
+
+                    b.HasKey("TimeStamp");
+
+                    b.ToTable("Temperatures");
+                });
 #pragma warning restore 612, 618
         }
     }
