@@ -10,20 +10,24 @@ namespace WebAPI.Controllers
     [Route("[controller]")]
     public class TemperatureController: ControllerBase
     {
-        private ITemperatureRepo TemperatureRepo;
+        private readonly ITemperatureRepo _temperatureRepo;
 
-        public TemperatureController(TemperatureRepo TemperatureRepo)
+        public TemperatureController(ITemperatureRepo temperatureRepo)
         {
-            this.TemperatureRepo = TemperatureRepo;
+            _temperatureRepo = temperatureRepo;
         }
         
 
         [HttpGet]
         public async Task<ActionResult<Temperature>> GetTemperatureAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
-                Temperature t = await TemperatureRepo.GetTemperatureAsync();
+                Temperature t = await _temperatureRepo.GetTemperatureAsync();
                 return Ok(t);
             }
             catch (Exception e)

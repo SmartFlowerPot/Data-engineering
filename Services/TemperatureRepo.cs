@@ -9,18 +9,12 @@ namespace WebAPI.Services
 {
     public class TemperatureRepo: ITemperatureRepo
     {
-        private Database database;
-        
-        public TemperatureRepo(Database dbContext)
-        {
-            database = dbContext;
-        }
-        
         public async Task<Temperature> GetTemperatureAsync()
         {
             try
             {
-                Temperature t = await database.Temperatures.LastOrDefaultAsync();
+                await using var database = new Database();
+                var t = await database.Temperatures.FirstOrDefaultAsync();
                 return t;
             }
             catch (Exception e)
