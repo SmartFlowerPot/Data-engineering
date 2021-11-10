@@ -10,11 +10,11 @@ namespace WebAPI.Controllers
     [Route("[controller]")]
     public class TemperatureController: ControllerBase
     {
-        private readonly ITemperatureRepo _temperatureRepo;
+        private readonly ITemperatureService _temperatureService;
 
-        public TemperatureController(ITemperatureRepo temperatureRepo)
+        public TemperatureController(ITemperatureService temperatureService)
         {
-            _temperatureRepo = temperatureRepo;
+            _temperatureService = temperatureService;
         }
         
 
@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                Temperature t = await _temperatureRepo.GetTemperatureAsync();
+                Temperature t = await _temperatureService.GetTemperatureAsync();
                 return Ok(t);
             }
             catch (Exception e)

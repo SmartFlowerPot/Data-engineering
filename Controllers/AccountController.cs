@@ -11,11 +11,11 @@ namespace WebAPI.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountRepo _accountRepo;
+        private readonly IAccountService _accountService;
 
-        public AccountController(IAccountRepo accountRepo)
+        public AccountController(IAccountService accountService)
         {
-            _accountRepo = accountRepo;
+            _accountService = accountService;
         }
         
         [HttpPost]
@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                var added = await _accountRepo.PostAccountAsync(account);
+                var added = await _accountService.PostAccountAsync(account);
                 return Created($"/{added.Username}", added);
             }
             catch (Exception e)
@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                var account = await _accountRepo.GetAccountAsync(username);
+                var account = await _accountService.GetAccountAsync(username);
                 return Ok(account);
             }
             catch (Exception e)
@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                var account = await _accountRepo.GetAccountAsync(username, password);
+                var account = await _accountService.GetAccountAsync(username, password);
                 return Ok(account);
             }
             catch (Exception e)
