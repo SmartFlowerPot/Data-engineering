@@ -27,5 +27,10 @@ namespace WebAPI.Services
         {
             return _accountRepo.GetAccountAsync(username, password);
         }
+
+        public Task<Account> DeleteAccountAsync(string username)
+        {
+            return _accountRepo.DeleteAccountAsync(username);
+        }
     }
 }

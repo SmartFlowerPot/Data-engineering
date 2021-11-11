@@ -51,6 +51,19 @@ namespace WebAPI.Persistence
             }
             return first;
         }
+
+        public async Task<Account> DeleteAccountAsync(string username)
+        {
+            await using var database = new Database();
+            var account = await database.Accounts.FirstOrDefaultAsync(u => u.Username.Equals(username));
+
+            if (account == null) throw new Exception(Status.UserNotFound);
+
+            database.Accounts.Remove(account);
+            await database.SaveChangesAsync();
+
+            return account;
+        }
     }
     
 }

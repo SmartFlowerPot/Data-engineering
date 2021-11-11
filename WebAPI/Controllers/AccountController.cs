@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(Status.BadRequest);
             }
             try
             {
@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(Status.BadRequest);
             }
             try
             {
@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(Status.BadRequest);
             }
             try
             {
@@ -71,6 +71,25 @@ namespace WebAPI.Controllers
             {
                 return HandleException(e.Message);
             }
+        }
+
+        [HttpDelete]
+        [Route("{username}")]
+        public async Task<ActionResult<Account>> DeleteAccountAsync([FromRoute] string username)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(Status.BadRequest);
+            }
+            try
+            {
+                var account = await _accountService.DeleteAccountAsync(username);
+                return Ok(account);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e.Message);
+            }  
         }
 
         private ActionResult<Account> HandleException(string message)

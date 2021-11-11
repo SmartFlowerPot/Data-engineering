@@ -8,5 +8,6 @@ namespace WebAPI.Services
         Task<Account> PostAccountAsync(Account account);
         Task<Account> GetAccountAsync(string username);
         Task<Account> GetAccountAsync(string username, string password);
+        Task<Account> DeleteAccountAsync(string username);
     }
 }
