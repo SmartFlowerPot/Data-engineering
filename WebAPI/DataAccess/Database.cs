@@ -8,6 +8,14 @@ namespace WebAPI.DataAccess
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Temperature> Temperatures { get; set; }
 
+        public Database()
+        {
+        }
+
+        public Database(DbContextOptions options) : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
