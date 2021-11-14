@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WebAPI.Gateway;
+using WebAPI.Gateway.Service;
 using WebAPI.Persistence;
 using WebAPI.Services;
 
@@ -29,6 +31,9 @@ namespace WebAPI
             
             services.AddScoped<IAccountRepo, AccountRepo>();
             services.AddScoped<ITemperatureRepo, TemperatureRepo>();
+
+            services.AddScoped<ILoriotService, LoriotService>();
+            services.AddScoped(typeof(LoriotClient));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
