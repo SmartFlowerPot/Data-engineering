@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json;
+using WebAPI.Gateway.Model;
 using WebAPI.Gateway.Service;
 using WebSocketSharp;
 
@@ -8,6 +10,7 @@ namespace WebAPI.Gateway
     {
         private WebSocket _socket;
         private string Url = "wss://iotnet.cibicom.dk/app?token=vnoUBwAAABFpb3RuZXQuY2liaWNvbS5ka54Zx4fqYp5yzAQtnGzDDUw=";
+        private const string eui = "0004A30B00E8355E";
         private ILoriotService _loriotService;
         
         
@@ -25,9 +28,10 @@ namespace WebAPI.Gateway
             _socket.Connect();
         }
 
-        public void SendDownlinkMessage(String jsonTelegram)
+        public void SendDownLinkMessage(String jsonTelegram)
         {
-            _socket.Send(jsonTelegram);
+            //TODO Make method asynchronous
+            _socket.Send("cq");
         }
 
         private void OnOpen(object? sender, EventArgs e)
@@ -41,9 +45,11 @@ namespace WebAPI.Gateway
         // so, whenever there is a new message/incoming from the loriot, C# knows that it has to execute this function.
         // sender = who is sending the msg
         // MEA = all the arguments contained in that msg / e=event
-        private static void OnMessage(object sender, MessageEventArgs e)
+        private void OnMessage(object sender, MessageEventArgs e)
         {
             Console.WriteLine("Received from the server: " + e.Data);
+            var message = JsonSerializer.Deserialize<IoTMessage>(e.Data);
+            _loriotService.HandleMessage(message);
         }
         
         

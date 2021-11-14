@@ -20,7 +20,24 @@ namespace WebAPI.Persistence
             {
                 Console.WriteLine(e);
             }
+            return null;
+        }
 
+        public async Task<Temperature> AddTemperatureAsync(Temperature temperature)
+        {
+            // try
+            // {
+            //     await using var database = new Database();
+            //     await database.Temperatures.AddAsync(temperature);
+            //     await database.SaveChangesAsync();
+            // }
+            // catch (Exception e)
+            // {
+            //     Console.WriteLine(e);
+            // }
+            // return null;
+
+            Console.WriteLine($"TEMPERATURE REPO: Timestamp: {temperature.TimeStamp}, Data: {temperature.Data}, EUI: {temperature.EUI}");
             return null;
         }
     }
