@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
@@ -20,8 +21,31 @@ namespace WebAPI.Persistence
             {
                 Console.WriteLine(e);
             }
-
             return null;
+        }
+
+        public async Task<Temperature> AddTemperatureAsync(Temperature temperature)
+        {
+            try
+            {
+                await using var database = new Database();
+                await database.Temperatures.AddAsync(temperature);
+                await database.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return temperature;
+            
+        }
+
+        public async Task AddTemperatureAsync(List<Temperature> temperatures)
+        {
+            foreach (var item in temperatures)
+            {
+                await AddTemperatureAsync(item);
+            }
         }
     }
 }
