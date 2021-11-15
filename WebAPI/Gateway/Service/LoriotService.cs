@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WebAPI.Gateway.Model;
+using WebAPI.Gateway.Persistence;
 using WebAPI.Models;
 using WebAPI.Persistence;
 
@@ -8,13 +9,13 @@ namespace WebAPI.Gateway.Service
 {
     public class LoriotService : ILoriotService
     {
-       private readonly ITemperatureRepo _temperatureRepo;
+       private readonly ILoriotRepo _loriotRepo;
        
         
-        public LoriotService(ITemperatureRepo temperatureRepo)
+        public LoriotService()
         {
-            _temperatureRepo = temperatureRepo;
-            
+            _loriotRepo = new LoriotRepo();
+
         }
         //Handle message switches through different cmds and based on the port number creates a proper measurement
         //Port number 1 => Temperature reading
@@ -59,7 +60,7 @@ namespace WebAPI.Gateway.Service
                 }
             }
 
-            _temperatureRepo.AddTemperatureAsync(temperatures);
+            _loriotRepo.AddTemperatureAsync(temperatures);
         }
         
         private Temperature CreateTemperature(IoTMessage message)
