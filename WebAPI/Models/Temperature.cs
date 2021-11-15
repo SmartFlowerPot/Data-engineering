@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAPI.Models
 {
@@ -6,10 +8,15 @@ namespace WebAPI.Models
     {
         //TODO Class was modified for testing purposes!!!
         [Key]
-        public string TimeStamp { get; set; }
-        public double TemperatureInDegrees { get; set; }
-
+        public DateTime TimeStamp { get; set; }
+        [Column("Temperature")]
+        public double TemperatureDegrees { get; set; }
         public string Data { get; set; }
         public string EUI { get; set; }
+
+        public override string ToString()
+        {
+            return $"TEMPERATURE: TIMESTAMP: {TimeStamp}, DATA: {Data}, EUI: {EUI}";
+        }
     }
 }

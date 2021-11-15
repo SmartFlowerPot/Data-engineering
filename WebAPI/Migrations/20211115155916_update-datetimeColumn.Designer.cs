@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataAccess;
 
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(Database))]
-    partial class DatabaseModelSnapshot : ModelSnapshot
+    [Migration("20211115155916_update-datetimeColumn")]
+    partial class updatedatetimeColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,8 +37,8 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.Temperature", b =>
                 {
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("DateTime")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Data")
                         .HasColumnType("nvarchar(max)");
@@ -47,7 +49,10 @@ namespace WebAPI.Migrations
                     b.Property<double>("TemperatureInDegrees")
                         .HasColumnType("float");
 
-                    b.HasKey("TimeStamp");
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("DateTime");
 
                     b.ToTable("Temperatures");
                 });

@@ -1,6 +1,8 @@
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using WebAPI.Gateway;
+using WebAPI.Gateway.Service;
 
 
 namespace WebAPI

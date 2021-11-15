@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WebAPI.Gateway.Model;
 using WebAPI.Models;
 using WebAPI.Persistence;
@@ -7,62 +8,69 @@ namespace WebAPI.Gateway.Service
 {
     public class LoriotService : ILoriotService
     {
-        private readonly ITemperatureRepo _temperatureRepo;
-        private LoriotClient _client;
+       private readonly ITemperatureRepo _temperatureRepo;
+       
         
-        public LoriotService(ITemperatureRepo temperatureRepo, LoriotClient loriotClient)
+        public LoriotService(ITemperatureRepo temperatureRepo)
         {
             _temperatureRepo = temperatureRepo;
-            _client = loriotClient;
+            
         }
-        //Handle message switches through different cmds and based on the port number creates a proper measurement 
+        //Handle message switches through different cmds and based on the port number creates a proper measurement
+        //Port number 1 => Temperature reading
+        //TODO Method to convert actual data to proper value, need to agree with the IoT team
         public void HandleMessage(IoTMessage message)
         {
+            List<Temperature> temperatures = new List<Temperature>();
             switch (message.cmd)
             {
                 case "rx":
                 {
-                    if (message.port == 2)
+                    if (message.port == 1)
                     {
-                        _temperatureRepo.AddTemperatureAsync(CreateTemperature(message));
+                        temperatures.Add(CreateTemperature(message));
+                        //_temperatureRepo.AddTemperatureAsync(CreateTemperature(message));
                     }
                     break;
                 }
                 case "cq":
                 {
-                    if (message.port == 2)
+                    foreach (var msg in message.cache)
                     {
-                        foreach (var msg in message.cache)
+                        if (msg.port == 1)
                         {
-                            _temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
+                            temperatures.Add(CreateTemperature(msg));
+                            // _temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
                         }
                     }
                     break;
                 }
                 case "gw":
                 {
-                    if (message.port == 2)
+                    foreach (var msg in message.cache)
                     {
-                        foreach (var msg in message.cache)
+                        if (msg.port == 1)
                         {
-                            _temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
+                            temperatures.Add(CreateTemperature(msg));
+                            //_temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
                         }
                     }
                     break; 
                 }
             }
-        }
 
-        public void SendDownLink()
-        {
-            _client.SendDownLinkMessage("");
+            _temperatureRepo.AddTemperatureAsync(temperatures);
         }
-
+        
         private Temperature CreateTemperature(IoTMessage message)
         {
+            // DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            // DateTime timeStamp = start.AddMilliseconds(message.ts).ToLocalTime();
+            
             return new()
             {
-                TimeStamp = message.ts.ToString(),
+                // DateTime = message.ts.ToString(),
+                TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(message.ts).DateTime,
                 Data = message.data,
                 EUI = message.EUI
             }; 
