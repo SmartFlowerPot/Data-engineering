@@ -35,8 +35,10 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.Temperature", b =>
                 {
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Data")
                         .HasColumnType("nvarchar(max)");
@@ -44,10 +46,17 @@ namespace WebAPI.Migrations
                     b.Property<string>("EUI")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("TemperatureInDegrees")
-                        .HasColumnType("float");
+                    b.Property<decimal>("TemperatureInDegrees")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Temperature");
 
-                    b.HasKey("TimeStamp");
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Ts")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Temperatures");
                 });

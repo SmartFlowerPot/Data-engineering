@@ -66,10 +66,19 @@ namespace WebAPI.Gateway.Service
         {
             // DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             // DateTime timeStamp = start.AddMilliseconds(message.ts).ToLocalTime();
+
+            String hexString = message.data;
+            int dec = int.Parse(hexString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            int point = int.Parse(hexString.Substring(2), System.Globalization.NumberStyles.HexNumber);
+            Console.WriteLine($"Decimal: {dec} Point: {point}");
+            decimal number = (decimal) (dec + (point / 100.0));
+            Console.WriteLine($"NUMBAAAAAAA: {number}");
             
             return new()
             {
                 // DateTime = message.ts.ToString(),
+                Ts = message.ts,
+                TemperatureInDegrees = number,
                 TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(message.ts).DateTime,
                 Data = message.data,
                 EUI = message.EUI
