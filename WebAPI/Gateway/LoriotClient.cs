@@ -28,7 +28,7 @@ namespace WebAPI.Gateway
             _socket.OnError += OnError;
             _socket.OnClose += OnClose;
             _socket.Connect();
-            GetCacheReadings();
+            //GetCacheReadings();
         }
 
         public void SendDownLinkMessage(String jsonTelegram)
@@ -37,15 +37,15 @@ namespace WebAPI.Gateway
             
         }
 
-        public void GetCacheReadings()
-        {
-            var message = new Message
-            {
-                cmd = "cq"
-            };
-            var json = JsonSerializer.Serialize(message);
-            _socket.Send(json);
-        }
+        // public void GetCacheReadings()
+        // {
+        //     var message = new Message
+        //     {
+        //         cmd = "cq"
+        //     };
+        //     var json = JsonSerializer.Serialize(message);
+        //     _socket.Send(json);
+        // }
 
         private void OnOpen(object? sender, EventArgs e)
         {

@@ -16,12 +16,12 @@ namespace WebAPI.Gateway.Persistence
             {
                 await using var database = new Database();
                 
-                var first = await database.Temperatures.FirstOrDefaultAsync(u => u.TimeStamp.Equals(temperature.TimeStamp));
-
-                if (first == null)
-                {
-                    return null;
-                }
+                // var first = await database.Temperatures.FirstOrDefaultAsync(u => u.TimeStamp.Equals(temperature.TimeStamp));
+                //
+                // if (first == null)
+                // {
+                //     return null;
+                // }
                 await database.Temperatures.AddAsync(temperature);
                 await database.SaveChangesAsync();
             }
