@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WebAPI.Gateway.Model;
+using WebAPI.Gateway.Persistence;
 using WebAPI.Models;
 using WebAPI.Persistence;
 
@@ -8,17 +9,17 @@ namespace WebAPI.Gateway.Service
 {
     public class LoriotService : ILoriotService
     {
-       private readonly ITemperatureRepo _temperatureRepo;
+       private readonly ILoriotRepo _loriotRepo;
        
         
-        public LoriotService(ITemperatureRepo temperatureRepo)
+        public LoriotService()
         {
-            _temperatureRepo = temperatureRepo;
-            
+            _loriotRepo = new LoriotRepo();
+
         }
         //Handle message switches through different cmds and based on the port number creates a proper measurement
         //Port number 1 => Temperature reading
-        //TODO Method to convert actual data to proper value, need to agree with the IoT team
+        //TODO Method to process the data to a proper value, need to agree with the IoT team on the format
         public void HandleMessage(IoTMessage message)
         {
             List<Temperature> temperatures = new List<Temperature>();
@@ -28,7 +29,9 @@ namespace WebAPI.Gateway.Service
                 {
                     if (message.port == 1)
                     {
-                        temperatures.Add(CreateTemperature(message));
+                        var temp = CreateTemperature(message);
+                        temperatures.Add(temp);
+                        Console.WriteLine($"HANDLE MESSAGE => {temp}");
                         //_temperatureRepo.AddTemperatureAsync(CreateTemperature(message));
                     }
                     break;
@@ -45,21 +48,18 @@ namespace WebAPI.Gateway.Service
                     }
                     break;
                 }
-                case "gw":
-                {
-                    foreach (var msg in message.cache)
-                    {
-                        if (msg.port == 1)
-                        {
-                            temperatures.Add(CreateTemperature(msg));
-                            //_temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
-                        }
-                    }
-                    break; 
-                }
+                // case "gw":
+                // {
+                //     if (message.port == 1)
+                //     {
+                //         temperatures.Add(CreateTemperature(message));
+                //         //_temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
+                //     }
+                //     break; 
+                // }
             }
 
-            _temperatureRepo.AddTemperatureAsync(temperatures);
+            _loriotRepo.AddTemperatureAsync(temperatures);
         }
         
         private Temperature CreateTemperature(IoTMessage message)

@@ -18,16 +18,17 @@ namespace WebAPI.Gateway
         // as we need to handle situation that we don't know exactly when they will happen,
         // so, to receive a msg from the server etc, we use event handlers: onClose, onMessage, onOpen...
         // those are event handlers that we can subscribe to.
-        public LoriotClient(ILoriotService loriotService)
+        public LoriotClient()
         {
-            _loriotService = loriotService;
+            //_loriotService = loriotService;
+            _loriotService = new LoriotService();
             _socket = new WebSocket(Url);
             _socket.OnOpen += OnOpen;
             _socket.OnMessage += OnMessage;
             _socket.OnError += OnError;
             _socket.OnClose += OnClose;
             _socket.Connect();
-            GetCacheReadings();
+            //GetCacheReadings();
         }
 
         public void SendDownLinkMessage(String jsonTelegram)
@@ -36,15 +37,15 @@ namespace WebAPI.Gateway
             
         }
 
-        public void GetCacheReadings()
-        {
-            var message = new Message
-            {
-                cmd = "cq"
-            };
-            var json = JsonSerializer.Serialize(message);
-            _socket.Send(json);
-        }
+        // public void GetCacheReadings()
+        // {
+        //     var message = new Message
+        //     {
+        //         cmd = "cq"
+        //     };
+        //     var json = JsonSerializer.Serialize(message);
+        //     _socket.Send(json);
+        // }
 
         private void OnOpen(object? sender, EventArgs e)
         {
