@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using WebAPI.Gateway;
+using WebAPI.Gateway.Service;
+
 
 namespace WebAPI
 {
@@ -13,6 +11,7 @@ namespace WebAPI
     {
         public static void Main(string[] args)
         {
+            LoriotClient client = new LoriotClient();
             CreateHostBuilder(args).Build().Run();
         }
 
