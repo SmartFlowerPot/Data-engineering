@@ -8,18 +8,17 @@ namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TemperatureController: ControllerBase
+    public class HumidityController : ControllerBase
     {
-        private readonly ITemperatureService _temperatureService;
+        private readonly IHumidityService _service;
 
-        public TemperatureController(ITemperatureService temperatureService)
+        public HumidityController(IHumidityService service)
         {
-            _temperatureService = temperatureService;
+            _service = service;
         }
         
-
         [HttpGet]
-        public async Task<ActionResult<Temperature>> GetTemperatureAsync()
+        public async Task<ActionResult<Humidity>> GetHumidityAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -27,8 +26,8 @@ namespace WebAPI.Controllers
             }
             try
             {
-                Temperature t = await _temperatureService.GetTemperatureAsync();
-                return Ok(t);
+                Humidity humidity = await _service.GetHumidityAsync();
+                return Ok(humidity);
             }
             catch (Exception e)
             {

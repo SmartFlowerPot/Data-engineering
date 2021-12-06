@@ -26,7 +26,7 @@ namespace WebAPI.Models
 
         public override string ToString()
         {
-            return $"TEMPERATURE: TIMESTAMP: {TimeStamp}, TEMPERATURE: {TemperatureInDegrees}, DATA: {Data}, EUI: {EUI}";
+            return $"TEMPERATURE: TIMESTAMP: {TimeStamp}, TEMPERATURE: {TemperatureInDegrees}";
         }
     }
 }

@@ -26,15 +26,19 @@ namespace WebAPI
         {
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebAPI", Version = "v1"}); });
-
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<ITemperatureService, TemperatureService>();
-            services.AddScoped<IPlantService, PlantService>();
             
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAccountRepo, AccountRepo>();
+            
+            services.AddScoped<ITemperatureService, TemperatureService>();
             services.AddScoped<ITemperatureRepo, TemperatureRepo>();
+            
+            services.AddScoped<IPlantService, PlantService>();
             services.AddScoped<IPlantRepo, PlantRepo>();
-
+            
+            services.AddScoped<IHumidityService, HumidityService>();
+            services.AddScoped<IHumidityRepo, HumidityRepo>();
+            
             services.AddScoped<ILoriotService, LoriotService>();
         }
 
