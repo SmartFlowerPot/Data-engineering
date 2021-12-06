@@ -75,23 +75,25 @@ namespace WebAPI.Controllers
 
         [HttpDelete]
         [Route("{username}")]
-        public async Task<ActionResult<Account>> DeleteAccountAsync([FromRoute] string username)
+        public async Task<ActionResult> DeleteAccountAsync([FromRoute] string username)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(Status.BadRequest);
             }
             try
-            {
-                var account = await _accountService.DeleteAccountAsync(username);
-                return Ok(account);
+            { 
+                await _accountService.DeleteAccountAsync(username);
+                return Ok();
             }
             catch (Exception e)
             {
-                return HandleException(e.Message);
+                return StatusCode(500, e.Message); 
             }  
         }
 
+        
+        
         private ActionResult<Account> HandleException(string message)
         {
             Console.WriteLine($"ACCOUNT CONTROLLER: {message}");

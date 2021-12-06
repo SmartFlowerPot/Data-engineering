@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
@@ -26,8 +27,10 @@ namespace WebAPI.Persistence
         {
             await using var database = new Database();
             
-            var first = await database.Accounts.FirstOrDefaultAsync
-                (u => u.Username.Equals(username));
+            var first = await database
+                .Accounts
+                .Include(a => a.Plants)
+                .FirstOrDefaultAsync(u => u.Username.Equals(username));
             if (first == null)
             { 
                 throw new Exception(Status.UserNotFound);
@@ -52,18 +55,24 @@ namespace WebAPI.Persistence
             return first;
         }
 
-        public async Task<Account> DeleteAccountAsync(string username)
+        public async Task DeleteAccountAsync(string username)
         {
             await using var database = new Database();
-            var account = await database.Accounts.FirstOrDefaultAsync(u => u.Username.Equals(username));
 
+            var account = database
+                .Accounts
+                .Where(a => a.Username.Equals(username))
+                .Include(a => a.Plants)
+                .FirstAsync();
+            
             if (account == null) throw new Exception(Status.UserNotFound);
-
-            database.Accounts.Remove(account);
+            
+            database.Plants.RemoveRange(account.Result.Plants);
+            database.Accounts.Remove(await account);
             await database.SaveChangesAsync();
-
-            return account;
         }
+        
+        
     }
     
 }

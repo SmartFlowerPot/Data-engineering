@@ -29,9 +29,11 @@ namespace WebAPI
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITemperatureService, TemperatureService>();
+            services.AddScoped<IPlantService, PlantService>();
             
             services.AddScoped<IAccountRepo, AccountRepo>();
             services.AddScoped<ITemperatureRepo, TemperatureRepo>();
+            services.AddScoped<IPlantRepo, PlantRepo>();
 
             services.AddScoped<ILoriotService, LoriotService>();
         }
