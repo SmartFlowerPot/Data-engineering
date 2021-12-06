@@ -39,6 +39,9 @@ namespace WebAPI
             services.AddScoped<IHumidityService, HumidityService>();
             services.AddScoped<IHumidityRepo, HumidityRepo>();
             
+            services.AddScoped<ICO2Service, CO2Service>();
+            services.AddScoped<ICO2Repo, CO2Repo>();
+
             services.AddScoped<ILoriotService, LoriotService>();
         }
 
