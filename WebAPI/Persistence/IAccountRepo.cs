@@ -8,6 +8,6 @@ namespace WebAPI.Persistence
         Task<Account> PostAccountAsync(Account account);
         Task<Account> GetAccountAsync(string username);
         Task<Account> GetAccountAsync(string username, string password);
-        Task<Account> DeleteAccountAsync(string username);
+        Task DeleteAccountAsync(string username);
     }
 }

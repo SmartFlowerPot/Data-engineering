@@ -11,7 +11,7 @@ namespace WebAPI
     {
         public static void Main(string[] args)
         {
-            LoriotClient client = new LoriotClient();
+            //LoriotClient client = new LoriotClient();
             CreateHostBuilder(args).Build().Run();
         }
 
