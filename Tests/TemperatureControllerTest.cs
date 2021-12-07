@@ -9,70 +9,70 @@ using Xunit.Abstractions;
 
 namespace Tests
 {
-    public class HumidityControllerTest : IntegrationTest
+    public class TemperatureControllerTest : IntegrationTest
     {
         private readonly ITestOutputHelper _testOutputHelper;
-
-        private Humidity humidity;
+        private Temperature _temperature;
 
         private const string validEui = "123465789";
         private const string invalidEui = "00000000";
-
-        public HumidityControllerTest(ITestOutputHelper outputHelper)
+        
+        public TemperatureControllerTest(ITestOutputHelper outputHelper)
         {
             _testOutputHelper = outputHelper;
-            humidity = new Humidity
+
+            _temperature = new()
             {
-                TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(1637153416488).DateTime,
                 EUI = validEui,
-                RelativeHumidity = 32
+                TemperatureInDegrees = new decimal(23.32),
+                TimeStamp = DateTime.Now
             };
         }
-
+        
         [Fact]
-        public async Task GetHumidity_InvalidEUITest()
+        public async Task GetTemperature_InvalidEUITest()
         {
             //Arrange
-            await PersistHumidityAsync();
+            await PersistTemperatureAsync();
             
             //Act
-            HttpResponseMessage response = await TestClient.GetAsync($"{https}/humidity?eui={invalidEui}");
+            HttpResponseMessage response = await TestClient.GetAsync($"{https}/temperature?eui={invalidEui}");
             
             //Assert
             _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             
             //Clean up
-            await DeleteHumidityAsync();
+            await DeleteTemperatureAsync();
         }
         
         [Fact]
-        public async Task GetHumidity_ValidEUITest()
+        public async Task GetTemperature_ValidEUITest()
         {
             //Arrange
-            await PersistHumidityAsync();
+            await PersistTemperatureAsync();
             
             //Act
-            HttpResponseMessage response = await TestClient.GetAsync($"{https}/humidity?eui={validEui}");
+            HttpResponseMessage response = await TestClient.GetAsync($"{https}/temperature?eui={validEui}");
             
             //Assert
             _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             
             //Clean up
-            await DeleteHumidityAsync();
+            await DeleteTemperatureAsync();
+        }
+        
+        private async Task PersistTemperatureAsync()
+        {
+            ITemperatureRepo repo = new TemperatureRepo();
+            await repo.PostTemperatureAsync(_temperature);
         }
 
-        private async Task PersistHumidityAsync()
+        private async Task DeleteTemperatureAsync()
         {
-            IHumidityRepo repo = new HumidityRepo();
-            await repo.PostHumidityAsync(humidity);
-        }
-
-        private async Task DeleteHumidityAsync()
-        {
-            IHumidityRepo repo = new HumidityRepo();
-            await repo.DeleteHumidityAsync(validEui);
+            ITemperatureRepo repo = new TemperatureRepo();
+            await repo.DeleteTemperatureAsync(validEui);
         }
     }
 }

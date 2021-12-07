@@ -35,5 +35,20 @@ namespace WebAPI.Persistence
             }
             return t;
         }
+
+        public async Task PostHumidityAsync(Humidity humidity)
+        {
+            await using var database = new Database();
+            database.Humidities.Add(humidity);
+            await database.SaveChangesAsync();
+        }
+
+        public async Task DeleteHumidityAsync(string eui)
+        {
+            await using var database = new Database();
+            var humidity = await database.Humidities.FirstAsync(h => h.EUI.Equals(eui));
+            database.Humidities.Remove(humidity);
+            await database.SaveChangesAsync();
+        }
     }
 }
