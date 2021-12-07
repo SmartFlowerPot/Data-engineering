@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Exceptions;
 using WebAPI.Models;
 using WebAPI.Services;
 
@@ -17,9 +18,8 @@ namespace WebAPI.Controllers
             _temperatureService = temperatureService;
         }
         
-
         [HttpGet]
-        public async Task<ActionResult<Temperature>> GetTemperatureAsync()
+        public async Task<ActionResult<Temperature>> GetLastTemperatureAsync([FromQuery] string eui)
         {
             if (!ModelState.IsValid)
             {
@@ -27,14 +27,26 @@ namespace WebAPI.Controllers
             }
             try
             {
-                Temperature t = await _temperatureService.GetTemperatureAsync();
+                Temperature t = await _temperatureService.GetTemperatureAsync(eui);
                 return Ok(t);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return StatusCode(500, e.Message);
+                return HandleException(e.Message);
             }
+        }
+
+        private ActionResult<Temperature> HandleException(string message)
+        {
+            switch (message)
+            {
+                case Status.MeasurementNotFound:
+                {
+                    return NotFound(message);
+                    break;
+                }
+            }
+            return StatusCode(500, message);
         }
     }
 }

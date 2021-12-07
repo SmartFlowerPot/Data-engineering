@@ -6,5 +6,6 @@ namespace WebAPI.Services
     public interface ITemperatureService
     {
         Task<Temperature> GetTemperatureAsync();
+        Task<Temperature> GetTemperatureAsync(string eui);
     }
 }
