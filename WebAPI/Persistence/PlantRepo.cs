@@ -38,7 +38,7 @@ namespace WebAPI.Persistence
             
             var first = await database
                 .Plants
-                .FirstOrDefaultAsync(p => p.DeviceIdentifier.Equals(eui));
+                .FirstOrDefaultAsync(p => p.EUI.Equals(eui));
             if (first == null)
             { 
                 throw new Exception(Status.DeviceNotFound);
