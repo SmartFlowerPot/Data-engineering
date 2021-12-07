@@ -8,5 +8,6 @@ namespace WebAPI.Services
     public interface IPlantService
     {
         Task<Plant> PostPlantAsync(Plant plant, string username);
+        Task<Plant> GetPlantByDeviceAsync(string eui);
     }
 }

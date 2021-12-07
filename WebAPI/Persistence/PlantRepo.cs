@@ -32,6 +32,18 @@ namespace WebAPI.Persistence
             return plant;
         }
 
-
+        public async Task<Plant> GetPlantByDeviceAsync(string eui)
+        {
+            await using var database = new Database();
+            
+            var first = await database
+                .Plants
+                .FirstOrDefaultAsync(p => p.DeviceIdentifier.Equals(eui));
+            if (first == null)
+            { 
+                throw new Exception(Status.DeviceNotFound);
+            }
+            return first;
+        }
     }
 }

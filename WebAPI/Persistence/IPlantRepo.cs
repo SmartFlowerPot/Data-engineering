@@ -7,5 +7,6 @@ namespace WebAPI.Persistence
     public interface IPlantRepo
     {
         Task<Plant> PostPlantAsync(Plant plant, string username);
+        Task<Plant> GetPlantByDeviceAsync(string eui);
     }
 }
