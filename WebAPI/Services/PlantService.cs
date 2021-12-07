@@ -18,5 +18,10 @@ namespace WebAPI.Services
         {
             return _plantRepo.PostPlantAsync(plant, username);
         }
+
+        public Task<Plant> GetPlantByDeviceAsync(string eui)
+        {
+            return _plantRepo.GetPlantByDeviceAsync(eui);
+        }
     }
 }

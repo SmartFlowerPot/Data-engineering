@@ -58,7 +58,7 @@ namespace WebAPI.Gateway
         // so, whenever there is a new message/incoming from the loriot, C# knows that it has to execute this function.
         // sender = who is sending the msg
         // MEA = all the arguments contained in that msg / e=event
-        private void OnMessage(object sender, MessageEventArgs e)
+        private void OnMessage(object? sender, MessageEventArgs e)
         {
             Console.WriteLine("Received from the server: " + e.Data);
             var message = JsonSerializer.Deserialize<IoTMessage>(e.Data);
