@@ -23,10 +23,8 @@ namespace WebAPI.Gateway.Service
             
             return new()
             {
-                Ts = message.ts,
                 TemperatureInDegrees = number,
                 TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(message.ts).DateTime,
-                Data = message.data,
                 EUI = message.EUI
             }; 
         }

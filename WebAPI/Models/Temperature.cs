@@ -8,19 +8,13 @@ namespace WebAPI.Models
 {
     public class Temperature
     {
-        //TODO Class was modified for testing purposes!!!
-        
         [Key]
         public int Id { get; set; }
         
         public DateTime TimeStamp { get; set; }
-
-        public long Ts { get; set; }
         
         [Column("Temperature")]
         public decimal TemperatureInDegrees { get; set; }
-        
-        public string Data { get; set; }
         
         public string EUI { get; set; }
 
