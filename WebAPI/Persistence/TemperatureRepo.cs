@@ -37,6 +37,20 @@ namespace WebAPI.Persistence
 
                 return t;
         }
-            
+
+        public async Task PostTemperatureAsync(Temperature temperature)
+        {
+            await using var database = new Database();
+            database.Temperatures.Add(temperature);
+            await database.SaveChangesAsync();
+        }
+
+        public async Task DeleteTemperatureAsync(string eui)
+        {
+            await using var database = new Database();
+            var temperature = await database.Temperatures.FirstAsync(h => h.EUI.Equals(eui));
+            database.Temperatures.Remove(temperature);
+            await database.SaveChangesAsync();
+        }
     }
 }

@@ -3,5 +3,9 @@
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::ACCAAE1B-5494-460B-A4CF-785EDFE23975::net5.0::Tests.AccountControllerTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::ACCAAE1B-5494-460B-A4CF-785EDFE23975::net5.0::Tests.MessageProcessorTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::ACCAAE1B-5494-460B-A4CF-785EDFE23975::net5.0::Tests.HumidityControllerTest.GetHumidityTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::ACCAAE1B-5494-460B-A4CF-785EDFE23975::net5.0::Tests.HumidityControllerTest.GetHumidity_InvalidEUITest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::ACCAAE1B-5494-460B-A4CF-785EDFE23975::net5.0::Tests.HumidityControllerTest.GetHumidity_ValidEUITest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::ACCAAE1B-5494-460B-A4CF-785EDFE23975::net5.0::Tests.TemperatureControllerTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

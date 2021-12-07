@@ -7,5 +7,7 @@ namespace WebAPI.Persistence
     {
         Task<Humidity> GetHumidityAsync();
         Task<Humidity> GetHumidityAsync(string eui);
+        Task PostHumidityAsync(Humidity humidity);
+        Task DeleteHumidityAsync(string eui);
     }
 }
