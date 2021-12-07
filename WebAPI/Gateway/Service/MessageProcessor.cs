@@ -47,14 +47,8 @@ namespace WebAPI.Gateway.Service
         public COTwo CreateCo2(IoTMessage message)
         {
             String hexString = message.data;
+            int co2Level = int.Parse(hexString.Substring(6), System.Globalization.NumberStyles.HexNumber);
             
-            //Byte[3]
-            int firstByte = int.Parse(hexString.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
-            
-            //Byte[4]
-            int secondByte = int.Parse(hexString.Substring(8, 2), System.Globalization.NumberStyles.HexNumber);
-
-            int co2Level = 100 * firstByte + secondByte;
             return new()
             {
                 EUI = message.EUI,
