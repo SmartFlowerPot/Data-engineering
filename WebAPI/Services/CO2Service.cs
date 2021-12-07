@@ -17,5 +17,11 @@ namespace WebAPI.Services
         {
             return await _co2Repo.GetCO2Async();
         }
+
+        public async Task<COTwo> GetCO2Async(string eui)
+        {
+            return await _co2Repo.GetCO2Async(eui);
+
+        }
     }
 }

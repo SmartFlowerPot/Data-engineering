@@ -19,5 +19,11 @@ namespace WebAPI.Services
         {
             return await _temperatureRepo.GetTemperatureAsync();
         }
+
+        public async Task<Temperature> GetTemperatureAsync(string eui)
+        {
+            return await _temperatureRepo.GetTemperatureAsync(eui);
+
+        }
     }
 }

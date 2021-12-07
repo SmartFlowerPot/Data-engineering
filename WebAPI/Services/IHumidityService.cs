@@ -6,5 +6,6 @@ namespace WebAPI.Services
     public interface IHumidityService
     {
         Task<Humidity> GetHumidityAsync();
+        Task<Humidity> GetHumidityAsync(string eui);
     }
 }

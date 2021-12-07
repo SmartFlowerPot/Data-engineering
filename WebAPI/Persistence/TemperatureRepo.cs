@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
+using WebAPI.Exceptions;
 using WebAPI.Models;
 
 namespace WebAPI.Persistence
@@ -24,28 +26,17 @@ namespace WebAPI.Persistence
             return null;
         }
 
-        public async Task<Temperature> AddTemperatureAsync(Temperature temperature)
+        public async Task<Temperature> GetTemperatureAsync(string eui)
         {
-            try
-            {
-                await using var database = new Database();
-                await database.Temperatures.AddAsync(temperature);
-                await database.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            return temperature;
-            
-        }
+            await using var database = new Database();
+                var t = database.Temperatures.Where(temp => temp.EUI.Equals(eui)).ToList().LastOrDefault();
+                if (t == null)
+                {
+                    throw new Exception(Status.MeasurementNotFound);
+                }
 
-        public async Task AddTemperatureAsync(List<Temperature> temperatures)
-        {
-            foreach (var item in temperatures)
-            {
-                await AddTemperatureAsync(item);
-            }
+                return t;
         }
+            
     }
 }

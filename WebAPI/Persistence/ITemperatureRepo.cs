@@ -7,7 +7,6 @@ namespace WebAPI.Persistence
     public interface ITemperatureRepo
     {
         Task<Temperature> GetTemperatureAsync();
-        Task<Temperature> AddTemperatureAsync(Temperature temperature);
-        Task AddTemperatureAsync(List<Temperature> temperatures);
+        Task<Temperature> GetTemperatureAsync(string eui);
     }
 }

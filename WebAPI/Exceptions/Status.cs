@@ -7,5 +7,6 @@
         public const string IncorrectPassword = "Incorrect Password";
         public const string BadRequest = "Bad Request";
         public const string DeviceNotFound = "Device not found";
+        public const string MeasurementNotFound = "Measurement Not Found";
     }
 }

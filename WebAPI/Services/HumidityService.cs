@@ -16,5 +16,11 @@ namespace WebAPI.Services
         {
             return await _repo.GetHumidityAsync();
         }
+
+        public async Task<Humidity> GetHumidityAsync(string eui)
+        {
+            return await _repo.GetHumidityAsync(eui);
+
+        }
     }
 }
