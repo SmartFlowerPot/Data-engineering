@@ -25,6 +25,20 @@ namespace WebAPI.Persistence
             }
             return null;
         }
+        
+        public async Task PostCO2Async(COTwo co2) {
+            await using var database = new Database();
+            database.CoTwos.Add(co2);
+            await database.SaveChangesAsync();
+        }
+
+        public async Task DeleteHumidityAsync(object validEui)
+        {
+            await using var database = new Database();
+            var _cO2 = await database.CoTwos.FirstAsync(c => c.EUI.Equals(validEui));
+            database.CoTwos.Remove(_cO2);
+            await database.SaveChangesAsync();
+        }
 
         public async Task<COTwo> GetCO2Async(string eui)
         {
@@ -35,7 +49,7 @@ namespace WebAPI.Persistence
                 throw new Exception(Status.MeasurementNotFound);
             }
             return t;
-            
         }
+        
     }
 }
