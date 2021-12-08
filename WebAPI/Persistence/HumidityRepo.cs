@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,17 @@ namespace WebAPI.Persistence
             var humidity = await database.Humidities.FirstAsync(h => h.EUI.Equals(eui));
             database.Humidities.Remove(humidity);
             await database.SaveChangesAsync();
+        }
+
+        public async Task<IList<Humidity>> GetListOfHumidityAsync(string eui)
+        {
+            DateTime dateTime = DateTime.Now.AddDays(-7);
+            await using var database = new Database();
+            var humidities = database.Humidities.Where(t => t.EUI.Equals(eui))
+                .Where(t => DateTime.Compare(t.TimeStamp, dateTime) >= 0).ToList();
+            if (!humidities.Any())
+                throw new Exception(Status.MeasurementNotFound);
+            return humidities;
         }
     }
 }

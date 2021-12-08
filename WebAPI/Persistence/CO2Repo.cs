@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,17 @@ namespace WebAPI.Persistence
             var _cO2 = await database.CoTwos.FirstAsync(c => c.EUI.Equals(validEui));
             database.CoTwos.Remove(_cO2);
             await database.SaveChangesAsync();
+        }
+
+        public async Task<IList<COTwo>> GetListOfCo2Async(string eui)
+        {
+            DateTime dateTime = DateTime.Now.AddDays(-7);
+            await using var database = new Database();
+            var co2 = database.CoTwos.Where(t => t.EUI.Equals(eui))
+                .Where(t => DateTime.Compare(t.TimeStamp, dateTime) >= 0).ToList();
+            if (!co2.Any())
+                throw new Exception(Status.MeasurementNotFound);
+            return co2;
         }
 
         public async Task<COTwo> GetCO2Async(string eui)

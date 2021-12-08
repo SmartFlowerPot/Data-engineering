@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebAPI.Gateway;
 using WebAPI.Gateway.Service;
 using WebAPI.Models;
@@ -24,6 +25,11 @@ namespace WebAPI.Services
         {
             return await _temperatureRepo.GetTemperatureAsync(eui);
 
+        }
+
+        public async Task<IList<Temperature>> GetListOfTemperaturesAsync(string eui)
+        {
+            return await _temperatureRepo.GetListOfTemperaturesAsync(eui);
         }
     }
 }

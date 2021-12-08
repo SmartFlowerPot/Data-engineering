@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Exceptions;
@@ -27,12 +28,31 @@ namespace WebAPI.Controllers
             }
             try
             {
-                Temperature t = await _temperatureService.GetTemperatureAsync(eui);
+                var t = await _temperatureService.GetTemperatureAsync(eui);
                 return Ok(t);
             }
             catch (Exception e)
             {
                 return HandleException(e.Message);
+            }
+        }
+        
+        [HttpGet]
+        [Route("history")]
+        public async Task<ActionResult<IList<Temperature>>> GetListOfTemperatures([FromQuery] string eui)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var t = await _temperatureService.GetListOfTemperaturesAsync(eui);
+                return Ok(t);
+            }
+            catch (Exception e)
+            {
+                return e.Message.Equals(Status.MeasurementNotFound) ? NotFound(e.Message) : StatusCode(500, e.Message);
             }
         }
 

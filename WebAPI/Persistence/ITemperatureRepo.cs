@@ -10,5 +10,6 @@ namespace WebAPI.Persistence
         Task<Temperature> GetTemperatureAsync(string eui);
         Task PostTemperatureAsync(Temperature temperature);
         Task DeleteTemperatureAsync(string eui);
+        Task<IList<Temperature>> GetListOfTemperaturesAsync(string eui);
     }
 }
