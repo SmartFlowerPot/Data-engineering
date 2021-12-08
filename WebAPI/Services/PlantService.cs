@@ -21,9 +21,9 @@ namespace WebAPI.Services
             return _plantRepo.PostPlantAsync(plant, username);
         }
 
-        public Plant GetPlantByDeviceAsync(string eui)
+        public async Task<Plant> GetPlantByDeviceAsync(string eui)
         {
-            Plant noAge = _plantRepo.GetPlantByDeviceAsync(eui).Result;
+            var noAge = await _plantRepo.GetPlantByDeviceAsync(eui);
             noAge.SetAge();
             return noAge;
         }

@@ -9,6 +9,6 @@ namespace WebAPI.Services
     {
         Task<Plant> PostPlantAsync(Plant plant, string username);
         Task<Plant> DeletePlantAsync(string eui);
-        Plant GetPlantByDeviceAsync(string eui);
+        Task<Plant> GetPlantByDeviceAsync(string eui);
     }
 }

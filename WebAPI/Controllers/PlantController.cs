@@ -51,7 +51,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                var plant = _plantService.GetPlantByDeviceAsync(eui);
+                var plant = await _plantService.GetPlantByDeviceAsync(eui);
                 return Ok(plant);
             }
             catch (Exception e)
