@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Exceptions;
@@ -33,6 +34,25 @@ namespace WebAPI.Controllers
             catch (Exception e)
             {
                 return HandleException(e.Message);
+            }
+        }
+        
+        [HttpGet]
+        [Route("history")]
+        public async Task<ActionResult<IList<Humidity>>> GetListOfTemperatures([FromQuery] string eui)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var t = await _service.GetListOfHumidityAsync(eui);
+                return Ok(t);
+            }
+            catch (Exception e)
+            {
+                return e.Message.Equals(Status.MeasurementNotFound) ? NotFound(e.Message) : StatusCode(500, e.Message);
             }
         }
         

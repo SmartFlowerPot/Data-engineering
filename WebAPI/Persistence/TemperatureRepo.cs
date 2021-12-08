@@ -52,5 +52,16 @@ namespace WebAPI.Persistence
             database.Temperatures.Remove(temperature);
             await database.SaveChangesAsync();
         }
+
+        public async Task<IList<Temperature>> GetListOfTemperaturesAsync(string eui)
+        {
+            DateTime dateTime = DateTime.Now.AddDays(-7);
+            await using var database = new Database();
+            var temperatures = database.Temperatures.Where(t => t.EUI.Equals(eui))
+                .Where(t => DateTime.Compare(t.TimeStamp, dateTime) >= 0).ToList();
+            if (!temperatures.Any())
+                throw new Exception(Status.MeasurementNotFound);
+            return temperatures;
+        }
     }
 }

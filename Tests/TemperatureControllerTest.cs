@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -27,6 +28,14 @@ namespace Tests
                 TemperatureInDegrees = new decimal(23.32),
                 TimeStamp = DateTime.Now
             };
+        }
+
+        [Fact]
+        public void DateTimeTest()
+        {
+            DateTime dateTime = DateTime.Now.AddDays(-7);
+            _testOutputHelper.WriteLine(dateTime.ToString(CultureInfo.InvariantCulture));
+            _testOutputHelper.WriteLine(DateTime.Compare(DateTime.Now, dateTime).ToString());
         }
         
         [Fact]

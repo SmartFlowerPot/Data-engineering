@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
 
@@ -21,6 +22,11 @@ namespace WebAPI.Services
         {
             return await _repo.GetHumidityAsync(eui);
 
+        }
+
+        public async Task<IList<Humidity>> GetListOfHumidityAsync(string eui)
+        {
+            return await _repo.GetListOfHumidityAsync(eui);
         }
     }
 }

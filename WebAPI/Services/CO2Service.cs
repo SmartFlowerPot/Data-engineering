@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
 
@@ -22,6 +23,10 @@ namespace WebAPI.Services
         {
             return await _co2Repo.GetCO2Async(eui);
 
+        }
+        public async Task<IList<COTwo>> GetListOfCo2Async(string eui)
+        {
+            return await _co2Repo.GetListOfCo2Async(eui);
         }
     }
 }

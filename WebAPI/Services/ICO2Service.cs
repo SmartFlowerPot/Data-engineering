@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebAPI.Models;
 
 namespace WebAPI.Services
@@ -7,5 +8,8 @@ namespace WebAPI.Services
     {
         Task<COTwo> GetCO2Async();
         Task<COTwo> GetCO2Async(string eui);
+        
+        Task<IList<COTwo>> GetListOfCo2Async(string eui);
+
     }
 }
