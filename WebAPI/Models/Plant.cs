@@ -15,8 +15,7 @@ namespace WebAPI.Models
         public void SetAge()
         {
             DateTime now = DateTime.Now;
-            DateTime old = new DateTime(2000, 08, 17);
-            var ageInDays = now.Subtract(old).Days;
+            var ageInDays = now.Subtract(DOB).Days;
             int age = ageInDays / 365;
             Age = age;
         }
