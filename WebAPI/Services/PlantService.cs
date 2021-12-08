@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using WebAPI.Models;
 using WebAPI.Persistence;
 
@@ -19,9 +21,11 @@ namespace WebAPI.Services
             return _plantRepo.PostPlantAsync(plant, username);
         }
 
-        public Task<Plant> GetPlantByDeviceAsync(string eui)
+        public Plant GetPlantByDeviceAsync(string eui)
         {
-            return _plantRepo.GetPlantByDeviceAsync(eui);
+            Plant noAge = _plantRepo.GetPlantByDeviceAsync(eui).Result;
+            noAge.SetAge();
+            return noAge;
         }
 
         public async Task<Plant> DeletePlantAsync(string eui)
