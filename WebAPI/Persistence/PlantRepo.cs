@@ -50,7 +50,9 @@ namespace WebAPI.Persistence
         {
             await using var database = new Database();
 
-            var plant = database.Plants.FirstOrDefault(p => p.EUI.Equals(eui));
+            var plant = database
+                .Plants
+                .FirstOrDefault(p => p.EUI.Equals(eui));
             if (plant == null)
             {
                 throw new Exception(Status.PlantNotFound);
