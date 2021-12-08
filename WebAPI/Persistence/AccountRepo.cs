@@ -42,8 +42,10 @@ namespace WebAPI.Persistence
         {
             await using var database = new Database();
             
-            var first = await database.Accounts.FirstOrDefaultAsync
-                (u => u.Username.Equals(username));
+            var first = await database
+                .Accounts
+                .FirstOrDefaultAsync(u => u.Username.Equals(username));
+            
             if (first == null)
             { 
                throw new Exception(Status.UserNotFound);
