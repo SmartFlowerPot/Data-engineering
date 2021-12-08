@@ -23,5 +23,10 @@ namespace WebAPI.Services
         {
             return _plantRepo.GetPlantByDeviceAsync(eui);
         }
+
+        public async Task<Plant> DeletePlantAsync(string eui)
+        {
+            return await _plantRepo.DeletePlantAsync(eui);
+        }
     }
 }
