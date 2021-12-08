@@ -8,5 +8,7 @@ namespace WebAPI.Persistence
         Task<COTwo> GetCO2Async();
         
         Task<COTwo> GetCO2Async(string eui);
+        Task PostCO2Async(COTwo co2);
+        Task DeleteHumidityAsync(object validEui);
     }
 }
