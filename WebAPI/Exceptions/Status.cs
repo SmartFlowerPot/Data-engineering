@@ -8,5 +8,6 @@
         public const string BadRequest = "Bad Request";
         public const string DeviceNotFound = "Device not found";
         public const string MeasurementNotFound = "Measurement Not Found";
+        public const string PlantNotFound = "Plant Not Found";
     }
 }

@@ -59,5 +59,23 @@ namespace WebAPI.Controllers
                 return e.Message == Status.DeviceNotFound ? NotFound(e.Message) : StatusCode(500, e.Message);
             }
         }
+
+        [HttpDelete]
+        public async Task<ActionResult<Plant>> DeletePlantAsync([FromQuery] string eui)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(Status.BadRequest);
+            }
+            try
+            {
+                var plant = await _plantService.DeletePlantAsync(eui);
+                return Ok(plant);
+            }
+            catch (Exception e)
+            {
+                return e.Message == Status.PlantNotFound ? NotFound(e.Message) : StatusCode(500, e.Message);
+            }
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace WebAPI.Persistence
     {
         Task<Plant> PostPlantAsync(Plant plant, string username);
         Task<Plant> GetPlantByDeviceAsync(string eui);
+        Task<Plant> DeletePlantAsync(string eui);
     }
 }

@@ -45,5 +45,20 @@ namespace WebAPI.Persistence
             }
             return first;
         }
+
+        public async Task<Plant> DeletePlantAsync(string eui)
+        {
+            await using var database = new Database();
+
+            var plant = database.Plants.FirstOrDefault(p => p.EUI.Equals(eui));
+            if (plant == null)
+            {
+                throw new Exception(Status.PlantNotFound);
+            }
+
+            database.Plants.Remove(plant);
+            await database.SaveChangesAsync();
+            return plant;
+        }
     }
 }
