@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
+using WebAPI.Services.Interface;
 
 namespace WebAPI.Services
 {
@@ -14,11 +16,6 @@ namespace WebAPI.Services
             _co2Repo = ico2Repo;
         }
         
-        public async Task<COTwo> GetCO2Async()
-        {
-            return await _co2Repo.GetCO2Async();
-        }
-
         public async Task<COTwo> GetCO2Async(string eui)
         {
             return await _co2Repo.GetCO2Async(eui);

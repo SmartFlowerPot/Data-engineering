@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
 using Xunit;
 using Xunit.Abstractions;
 

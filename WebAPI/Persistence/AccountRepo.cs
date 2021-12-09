@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
 using WebAPI.Exceptions;
 using WebAPI.Models;
+using WebAPI.Persistence.Interface;
 
 namespace WebAPI.Persistence
 {

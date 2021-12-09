@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -75,13 +76,13 @@ namespace Tests
         private async Task PersistTemperatureAsync()
         {
             ITemperatureRepo repo = new TemperatureRepo();
-            await repo.PostTemperatureAsync(_temperature);
+            //await repo.PostTemperatureAsync(_temperature);
         }
 
         private async Task DeleteTemperatureAsync()
         {
             ITemperatureRepo repo = new TemperatureRepo();
-            await repo.DeleteTemperatureAsync(validEui);
+            //await repo.DeleteTemperatureAsync(validEui);
         }
     }
 }

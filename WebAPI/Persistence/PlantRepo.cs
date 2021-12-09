@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
 using WebAPI.Exceptions;
 using WebAPI.Models;
+using WebAPI.Persistence.Interface;
 
 namespace WebAPI.Persistence
 {
@@ -37,7 +38,7 @@ namespace WebAPI.Persistence
             await using var database = new Database();
             
             var first = await database
-                .Plants
+                .Plants.Include(p => p.Measurements)
                 .FirstOrDefaultAsync(p => p.EUI.Equals(eui));
             if (first == null)
             { 

@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using WebAPI.Models;
 
-namespace WebAPI.Services
+namespace WebAPI.Persistence.Interface
 {
-    public interface IHumidityService
+    public interface IHumidityRepo
     {
-        Task<Humidity> GetHumidityAsync();
+        //Task<Humidity> GetHumidityAsync();
         Task<Humidity> GetHumidityAsync(string eui);
-        
+        //Task PostHumidityAsync(Humidity humidity);
+        //Task DeleteHumidityAsync(string eui);
         Task<IList<Humidity>> GetListOfHumidityAsync(string eui);
 
     }

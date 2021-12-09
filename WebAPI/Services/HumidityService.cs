@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
+using WebAPI.Services.Interface;
 
 namespace WebAPI.Services
 {
@@ -13,11 +15,6 @@ namespace WebAPI.Services
         {
             _repo = repo;
         }
-        public async Task<Humidity> GetHumidityAsync()
-        {
-            return await _repo.GetHumidityAsync();
-        }
-
         public async Task<Humidity> GetHumidityAsync(string eui)
         {
             return await _repo.GetHumidityAsync(eui);

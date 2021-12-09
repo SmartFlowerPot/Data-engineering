@@ -8,7 +8,9 @@ using Microsoft.OpenApi.Models;
 using WebAPI.Gateway;
 using WebAPI.Gateway.Service;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
 using WebAPI.Services;
+using WebAPI.Services.Interface;
 
 namespace WebAPI
 {
@@ -43,6 +45,9 @@ namespace WebAPI
             services.AddScoped<ICO2Repo, CO2Repo>();
 
             services.AddScoped<ILoriotService, LoriotService>();
+
+            services.AddScoped<IMeasurementService, MeasurementService>();
+            services.AddScoped<IMeasurementRepo, MeasurementRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

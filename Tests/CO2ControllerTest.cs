@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
 
 namespace Tests
 {
@@ -77,13 +78,13 @@ namespace Tests
             private async Task PersistCO2Async()
             {
                 ICO2Repo repo = new CO2Repo();
-                await repo.PostCO2Async(_co2);
+                //await repo.PostCO2Async(_co2);
             }
 
             private async Task DeleteCO2Async()
             {
                 ICO2Repo repo = new CO2Repo();
-                await repo.DeleteHumidityAsync(validEui);
+                //await repo.DeleteHumidityAsync(validEui);
             }
             
             

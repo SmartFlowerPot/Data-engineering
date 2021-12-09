@@ -6,10 +6,11 @@ namespace WebAPI.DataAccess
     public class Database : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Temperature> Temperatures { get; set; }
+        //public DbSet<Temperature> Temperatures { get; set; }
         public DbSet<Plant> Plants { get; set; }
-        public DbSet<Humidity> Humidities { get; set; }
-        public DbSet<COTwo> CoTwos { get; set; }
+        //public DbSet<Humidity> Humidities { get; set; }
+        //public DbSet<COTwo> CoTwos { get; set; }
+        public DbSet<Measurement> Measurements { get; set; }
 
         public Database()
         {

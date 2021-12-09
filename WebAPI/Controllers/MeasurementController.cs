@@ -4,24 +4,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Exceptions;
 using WebAPI.Models;
-using WebAPI.Services;
 using WebAPI.Services.Interface;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CO2Controller : ControllerBase
+    public class MeasurementController: ControllerBase
     {
-        private readonly ICO2Service _co2Service;
-
-        public CO2Controller(ICO2Service co2Service)
+        private readonly IMeasurementService _measurementService;
+        
+        public MeasurementController(IMeasurementService measurementService)
         {
-            _co2Service = co2Service;
+            _measurementService = measurementService;
         }
         
         [HttpGet]
-        public async Task<ActionResult<COTwo>> GetCO2Async([FromQuery] string eui)
+        public async Task<ActionResult<Measurement>> GetLastMeasurement([FromQuery] string eui)
         {
             if (!ModelState.IsValid)
             {
@@ -29,18 +28,19 @@ namespace WebAPI.Controllers
             }
             try
             {
-                COTwo co2 = await _co2Service.GetCO2Async(eui);
-                return Ok(co2);
+                var t = await _measurementService.GetMeasurementAsync(eui);
+                return Ok(t);
             }
             catch (Exception e)
             {
-                return HandleException(e.Message);
+                Console.WriteLine(e.Message);
+                return e.Message.Equals(Status.MeasurementNotFound) ? NotFound(e.Message) : StatusCode(500, e.Message);
             }
         }
         
         [HttpGet]
         [Route("history")]
-        public async Task<ActionResult<IList<COTwo>>> GetListOfTemperatures([FromQuery] string eui)
+        public async Task<ActionResult<IList<Measurement>>> GetListOfMeasurements([FromQuery] string eui)
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                var t = await _co2Service.GetListOfCo2Async(eui);
+                var t = await _measurementService.GetMeasurementHistoryAsync(eui);
                 return Ok(t);
             }
             catch (Exception e)
@@ -56,18 +56,6 @@ namespace WebAPI.Controllers
                 return e.Message.Equals(Status.MeasurementNotFound) ? NotFound(e.Message) : StatusCode(500, e.Message);
             }
         }
-        
-        private ActionResult<COTwo> HandleException(string message)
-        {
-            switch (message)
-            {
-                case Status.MeasurementNotFound:
-                {
-                    return NotFound(message);
-                    break;
-                }
-            }
-            return StatusCode(500, message);
-        }
+
     }
 }

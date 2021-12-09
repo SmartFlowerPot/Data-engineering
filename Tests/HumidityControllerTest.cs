@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -66,13 +67,13 @@ namespace Tests
         private async Task PersistHumidityAsync()
         {
             IHumidityRepo repo = new HumidityRepo();
-            await repo.PostHumidityAsync(humidity);
+            //await repo.PostHumidityAsync(humidity);
         }
 
         private async Task DeleteHumidityAsync()
         {
             IHumidityRepo repo = new HumidityRepo();
-            await repo.DeleteHumidityAsync(validEui);
+            //await repo.DeleteHumidityAsync(validEui);
         }
     }
 }

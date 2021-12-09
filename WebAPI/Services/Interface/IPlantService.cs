@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebAPI.Models;
 
-namespace WebAPI.Services
+namespace WebAPI.Services.Interface
 {
     public interface IPlantService
     {

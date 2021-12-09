@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using WebAPI.Models;
 
-namespace WebAPI.Services
+namespace WebAPI.Persistence.Interface
 {
-    public interface IAccountService
+    public interface IAccountRepo
     {
         Task<Account> PostAccountAsync(Account account);
         Task<Account> GetAccountAsync(string username);
