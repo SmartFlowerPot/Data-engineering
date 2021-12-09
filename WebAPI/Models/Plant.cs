@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Models
 {
@@ -16,6 +17,7 @@ namespace WebAPI.Models
         [NotMapped] 
         public int Age { get; set; }
 
+        [JsonIgnore]
         public IList<Measurement> Measurements { get; set; }
 
         public void SetAge()

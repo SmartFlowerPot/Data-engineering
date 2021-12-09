@@ -38,7 +38,7 @@ namespace WebAPI.Persistence
             await using var database = new Database();
             
             var first = await database
-                .Plants.Include(p => p.Measurements)
+                .Plants
                 .FirstOrDefaultAsync(p => p.EUI.Equals(eui));
             if (first == null)
             { 
