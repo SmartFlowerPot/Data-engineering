@@ -6,6 +6,16 @@ namespace WebAPI.Gateway.Service
 {
     public class MessageProcessor
     {
+
+        public Measurement CreateMeasurement(IoTMessage message)
+        {
+            var measurement = new Measurement();
+            measurement.Temperature = CreateTemperature(message).TemperatureInDegrees;
+            measurement.Humidity = CreateHumidity(message).RelativeHumidity;
+            measurement.CO2 = CreateCo2(message).CO2Level;
+            measurement.TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(message.ts).DateTime;
+            return measurement;
+        }
         
         public Temperature CreateTemperature(IoTMessage message)
         {

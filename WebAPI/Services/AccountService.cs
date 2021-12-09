@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
+using WebAPI.Services.Interface;
 
 namespace WebAPI.Services
 {

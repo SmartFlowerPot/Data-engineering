@@ -4,6 +4,8 @@ using WebAPI.Gateway;
 using WebAPI.Gateway.Service;
 using WebAPI.Models;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
+using WebAPI.Services.Interface;
 
 namespace WebAPI.Services
 {
@@ -16,11 +18,6 @@ namespace WebAPI.Services
             _temperatureRepo = temperatureRepo;
         }
         
-        public async Task<Temperature> GetTemperatureAsync()
-        {
-            return await _temperatureRepo.GetTemperatureAsync();
-        }
-
         public async Task<Temperature> GetTemperatureAsync(string eui)
         {
             return await _temperatureRepo.GetTemperatureAsync(eui);

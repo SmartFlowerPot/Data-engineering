@@ -28,41 +28,17 @@ namespace WebAPI.Gateway.Service
             {
                 case "rx":
                 {
-                    // var temp = CreateTemperature(message);
-                    // temperatures.Add(temp);
-                    // Console.WriteLine($"HANDLE MESSAGE => {temp}");
-                    //_temperatureRepo.AddTemperatureAsync(CreateTemperature(message));
-
-                    var temp = _processor.CreateTemperature(message);
-                    var humidity = _processor.CreateHumidity(message);
-                    var co2 = _processor.CreateCo2(message);
-
-                    await _loriotRepo.AddTemperatureAsync(temp);
-                    await _loriotRepo.AddHumidityAsync(humidity);
-                    await _loriotRepo.AddCo2Async(co2);
+                    // var temp = _processor.CreateTemperature(message);
+                    // var humidity = _processor.CreateHumidity(message);
+                    // var co2 = _processor.CreateCo2(message);
+                    //
+                    // await _loriotRepo.AddTemperatureAsync(temp);
+                    // await _loriotRepo.AddHumidityAsync(humidity);
+                    // await _loriotRepo.AddCo2Async(co2);
+                    var measurement = _processor.CreateMeasurement(message);
+                    await _loriotRepo.AddMeasurement(measurement, message.EUI);
                     break;
                 }
-                // case "cq":
-                // {
-                //     foreach (var msg in message.cache)
-                //     {
-                //         if (msg.port == 1)
-                //         {
-                //             temperatures.Add(CreateTemperature(msg));
-                //             // _temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
-                //         }
-                //     }
-                //     break;
-                // }
-                // case "gw":
-                // {
-                //     if (message.port == 1)
-                //     {
-                //         temperatures.Add(CreateTemperature(message));
-                //         //_temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
-                //     }
-                //     break; 
-                // }
             }
         }
     }
