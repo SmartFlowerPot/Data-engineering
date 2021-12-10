@@ -52,13 +52,13 @@ namespace WebAPI.Persistence
             await using var database = new Database();
 
             var plant = database
-                .Plants
+                .Plants.Include(p => p.Measurements)
                 .FirstOrDefault(p => p.EUI.Equals(eui));
             if (plant == null)
             {
                 throw new Exception(Status.PlantNotFound);
             }
-
+            database.Measurements.RemoveRange(plant.Measurements);
             database.Plants.Remove(plant);
             await database.SaveChangesAsync();
             return plant;

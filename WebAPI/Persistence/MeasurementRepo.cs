@@ -22,9 +22,15 @@ namespace WebAPI.Persistence
             await using var database = new Database();
             var plant = await database.Plants.Include(p => p.Measurements)
                 .FirstOrDefaultAsync(p => p.EUI.Equals(eui));
+            
+            if (plant == null)
+            {
+                throw new Exception(Status.PlantNotFound);
+            }
+            
             var measurement = plant.Measurements.LastOrDefault();
             
-            if (measurement is null or null)
+            if (measurement is null)
             {
                 throw new Exception(Status.MeasurementNotFound);
             }
@@ -39,6 +45,12 @@ namespace WebAPI.Persistence
             await using var database = new Database();
             var plant = await database.Plants.Include(p => p.Measurements)
                 .FirstOrDefaultAsync(p => p.EUI.Equals(eui));
+            
+            if (plant == null)
+            {
+                throw new Exception(Status.PlantNotFound);
+            }
+            
             var measurements = plant.Measurements
                 .Where(m => DateTime.Compare(m.TimeStamp, dateTime) >= 0).ToList();
 
