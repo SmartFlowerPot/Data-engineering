@@ -9,7 +9,7 @@ using WebAPI.Persistence.Interface;
 
 namespace WebAPI.Persistence
 {
-    public class AccountRepo: IAccountRepo
+    public class AccountRepo : IAccountRepo
     {
         public async Task<Account> PostAccountAsync(Account account)
         {
@@ -27,34 +27,37 @@ namespace WebAPI.Persistence
         public async Task<Account> GetAccountAsync(string username)
         {
             await using var database = new Database();
-            
+
             var first = await database
                 .Accounts
                 .Include(a => a.Plants)
                 .FirstOrDefaultAsync(u => u.Username.Equals(username));
             if (first == null)
-            { 
+            {
                 throw new Exception(Status.UserNotFound);
             }
+
             return first;
         }
 
         public async Task<Account> GetAccountAsync(string username, string password)
         {
             await using var database = new Database();
-            
+
             var first = await database
                 .Accounts
                 .FirstOrDefaultAsync(u => u.Username.Equals(username));
-            
+
             if (first == null)
-            { 
-               throw new Exception(Status.UserNotFound);
+            {
+                throw new Exception(Status.UserNotFound);
             }
+
             if (!first.Password.Equals(password))
             {
                 throw new Exception(Status.IncorrectPassword);
             }
+
             return first;
         }
 
@@ -62,20 +65,22 @@ namespace WebAPI.Persistence
         {
             await using var database = new Database();
 
-            var account = database
-                .Accounts
-                .Where(a => a.Username.Equals(username))
-                .Include(a => a.Plants)
-                .FirstAsync();
-            
-            if (account == null) throw new Exception(Status.UserNotFound);
-            
-            database.Plants.RemoveRange(account.Result.Plants);
-            database.Accounts.Remove(await account);
-            await database.SaveChangesAsync();
+            var account = await database.Accounts.Include(a
+                    => a.Plants).ThenInclude(p => p.Measurements)
+                .FirstOrDefaultAsync(a => a.Username.Equals(username));
+
+            if (account != null)
+            {
+                foreach (var plant in account.Plants)
+                {
+                    database.Measurements.RemoveRange(plant.Measurements);
+                }
+
+                database.Plants.RemoveRange(account.Plants);
+                database.Accounts.Remove(account);
+
+                await database.SaveChangesAsync();
+            }
         }
-        
-        
     }
-    
 }

@@ -64,7 +64,10 @@ namespace WebAPI.Controllers
                 case Status.MeasurementNotFound:
                 {
                     return NotFound(message);
-                    break;
+                }
+                case Status.DeviceNotFound:
+                {
+                    return NotFound(message);
                 }
             }
             return StatusCode(500, message);

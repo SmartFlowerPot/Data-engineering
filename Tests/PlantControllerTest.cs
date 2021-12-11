@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
@@ -14,50 +14,93 @@ namespace Tests
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        private Plant plant;
+        private readonly Plant _plant;
+        private readonly Account _account;
 
-        private const string validEui = "123465789";
-        private const string invalidEui = "696969696";
+        private const string ValidUsername = "PLANT TEST USERNAME";
+        private const string PlantNickname = "TEST PLANT";
+        private const string ValidEui = "123465789";
+        private const string InvalidEui = "696969696";
 
         public PlantControllerTest(ITestOutputHelper outputHelper)
         {
             _testOutputHelper = outputHelper;
-            plant = new Plant
+            _plant = new Plant
             {
                 DOB = new DateTime(2019, 09, 23),
-                EUI = validEui,
-                Nickname = "Alex's plant"
+                EUI = ValidEui,
+                Nickname = PlantNickname
+            };
+            _account = new Account()
+            {
+                Username = ValidUsername,
+                DateOfBirth = DateTime.Now,
+                Password = "password",
+                Gender = "Male"
             };
         }
 
         [Fact]
-        public async Task GetPlantInvalidEUITest()
+        public async Task GetPlantInvalidEuiTest()
         {
             //Arrange
+            await DeletePlantAsync();
             await PersistPlantAsync();
             
             //Act
-            HttpResponseMessage response = await TestClient.GetAsync($"{https}/plant?eui={invalidEui}");
+            var response = await TestClient.GetAsync($"{Https}/plant?eui={InvalidEui}");
             
             //Assert
             _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
-            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            
             //Clean up
             await DeletePlantAsync();
         }
         
         [Fact]
-        public async Task GetPlantValidEUITest()
+        public async Task GetPlantValidEuiTest()
         {
             //Arrange
+            await DeletePlantAsync();
             await PersistPlantAsync();
             
             //Act
-            HttpResponseMessage response = await TestClient.GetAsync($"{https}/plant?eui={validEui}");
-            
+            var response = await TestClient.GetAsync($"{Https}/plant?eui={ValidEui}");
+            var json = await response.Content.ReadAsStringAsync();
+            var plant = JsonSerializer.Deserialize<Plant>(json, new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
             //Assert
             _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            if (plant != null) Assert.Equal(PlantNickname, plant.Nickname);
+            //Clean up
+            await DeletePlantAsync();
+        }
+
+        [Fact]
+        public async Task RemovePlantTest()
+        {
+            //Arrange
+            await DeletePlantAsync();
+            await PersistPlantAsync();
+            
+            //Act
+            var response = await TestClient.GetAsync($"{Https}/plant?eui={ValidEui}");
+            var response1 = await TestClient.DeleteAsync($"{Https}/plant?eui={ValidEui}");
+            var response2 = await TestClient.GetAsync($"{Https}/plant?eui={ValidEui}");
+            
+            //Assert
+            _testOutputHelper.WriteLine("RESPONSE 0: "+response.Content.ReadAsStringAsync().Result);
+            _testOutputHelper.WriteLine("RESPONSE 1: "+response1.Content.ReadAsStringAsync().Result);
+            _testOutputHelper.WriteLine("RESPONSE 2: "+response2.Content.ReadAsStringAsync().Result);
+            
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response2.StatusCode);
             
             //Clean up
             await DeletePlantAsync();
@@ -65,14 +108,17 @@ namespace Tests
 
         private async Task PersistPlantAsync()
         {
+            IAccountRepo accountRepo = new AccountRepo();
+            await accountRepo.PostAccountAsync(_account);
+            
             IPlantRepo repo = new PlantRepo();
-            await repo.PostPlantAsync(plant, "lucas");
+            await repo.PostPlantAsync(_plant, ValidUsername);
         }
-
+        
         private async Task DeletePlantAsync()
         {
-            IPlantRepo repo = new PlantRepo();
-            await repo.DeletePlantAsync(validEui);
+            IAccountRepo accountRepo = new AccountRepo();
+            await accountRepo.DeleteAccountAsync(_account.Username);
         }
     }
 }
