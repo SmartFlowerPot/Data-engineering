@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
 using WebAPI.Exceptions;
@@ -23,8 +21,12 @@ namespace WebAPI.Persistence
                 await database
                     .Accounts
                     .Include(a => a.Plants)
-                    .FirstAsync(a => a.Username.Equals(username));
-            
+                    .FirstOrDefaultAsync(a => a.Username.Equals(username));
+            if (accountToAddPlant == null)
+            {
+                throw new Exception(Status.UserNotFound);
+            }
+
             accountToAddPlant.Plants.Add(plant);
             
             database.Update(accountToAddPlant);
@@ -56,7 +58,7 @@ namespace WebAPI.Persistence
                 .FirstOrDefault(p => p.EUI.Equals(eui));
             if (plant == null)
             {
-                throw new Exception(Status.PlantNotFound);
+                throw new Exception(Status.DeviceNotFound);
             }
             database.Measurements.RemoveRange(plant.Measurements);
             database.Plants.Remove(plant);

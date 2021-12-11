@@ -1,94 +1,114 @@
-﻿using System.Net;
-using WebAPI.Persistence;
-using WebAPI.Persistence.Interface;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using WebAPI.Models;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Tests
 {
-    using System;
-    using System.Net.Http;
-    using System.Text;
-    using System.Text.Json;
-    using System.Threading.Tasks;
-    using WebAPI.Models;
-    using Xunit;
-    using Xunit.Abstractions;
-
     namespace Tests
     {
         public class CO2ControllerTest : IntegrationTest
         {
             private readonly ITestOutputHelper _testOutputHelper;
-            private COTwo _co2;
-            private const string validEui = "0004A30B00251001";
-            private const string invalidEui = "00000000";
+            private MeasurementPersistence _persistence;
+
+            private const string ValidEui = "qwerty";
+            private const string InvalidEui = "00000000";
 
             public CO2ControllerTest(ITestOutputHelper outputHelper)
             {
                 _testOutputHelper = outputHelper;
-                _co2 = new COTwo()
-                {
-                    TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(1638873847).DateTime,
-                    EUI = validEui,
-                    CO2Level = 911
-                };
+                _persistence = new MeasurementPersistence();
             }
 
-            private async Task<HttpResponseMessage> PostCO2()
-            {
-                string accountJson = JsonSerializer.Serialize(_co2);
-                HttpContent content = new StringContent(accountJson, Encoding.UTF8, "application/json");
-                HttpResponseMessage responseMessage = await TestClient.PostAsync(https + "/CO2", content);
-                return responseMessage;
-            }
 
             [Fact]
             public async Task GetValidCO2Test()
             {
                 //Arrange
-                await PersistCO2Async();
-            
+                await _persistence.DeleteMeasurement();
+                await _persistence.PersistMeasurement();
+
                 //Act
-                HttpResponseMessage response = await TestClient.GetAsync($"{https}/CO2?eui={validEui}");
-            
+                HttpResponseMessage response = await TestClient.GetAsync($"{Https}/CO2?eui={ValidEui}");
+                var json = await response.Content.ReadAsStringAsync();
+                var coTwo = JsonSerializer.Deserialize<COTwo>(json, new JsonSerializerOptions()
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+
                 //Assert
-                _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
+                _testOutputHelper.WriteLine("RESPONSE: " + response.Content.ReadAsStringAsync().Result);
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            
+                if (coTwo != null) Assert.Equal(420, coTwo.CO2Level);
+
                 //Clean up
-                await DeleteCO2Async();
+                await _persistence.DeleteMeasurement();
             }
-            
+
             [Fact]
             public async Task GetInvalidCO2Test()
             {
                 //Arrange
-                await PersistCO2Async();
+                await _persistence.DeleteMeasurement();
+                await _persistence.PersistMeasurement();
+
+                //Act
+                HttpResponseMessage response = await TestClient.GetAsync($"{Https}/CO2?eui={InvalidEui}");
+
+                //Assert
+                _testOutputHelper.WriteLine("RESPONSE: " + response.Content.ReadAsStringAsync().Result);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+                //Clean up
+                await _persistence.DeleteMeasurement();
+            }
+            
+            [Fact]
+            public async Task GetCO2History()
+            {
+                //Arrange
+                await _persistence.DeleteMeasurement();
+                await _persistence.PersistMeasurement();
+            
+                //Measurement that is older than one week
+                var measurement = new Measurement()
+                {
+                    CO2 = 999,
+                    Temperature = 999,
+                    Humidity = 999,
+                    TimeStamp = DateTime.Now.AddDays(-8)
+                };
+                await _persistence.PersistMeasurement(measurement);
             
                 //Act
-                HttpResponseMessage response = await TestClient.GetAsync($"{https}/CO2?eui={invalidEui}");
+                var response = await TestClient.GetAsync($"{Https}/co2/history?eui={ValidEui}");
+                var json = await response.Content.ReadAsStringAsync();
+                var temps = JsonSerializer.Deserialize<List<COTwo>>(json, new JsonSerializerOptions()
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
             
                 //Assert
                 _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
-                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+                //Assert if all measurements are no more than 7 days old
+                var dateTime = DateTime.Now.AddDays(-7);
+                foreach (var isAfter in temps.Select(t => DateTime.Compare(t.TimeStamp, dateTime)))
+                {
+                    Assert.Equal(1,isAfter);
+                }
             
                 //Clean up
-                await DeleteCO2Async();
+                await _persistence.DeleteMeasurement();
             }
-            
-            private async Task PersistCO2Async()
-            {
-                ICO2Repo repo = new CO2Repo();
-                //await repo.PostCO2Async(_co2);
-            }
-
-            private async Task DeleteCO2Async()
-            {
-                ICO2Repo repo = new CO2Repo();
-                //await repo.DeleteHumidityAsync(validEui);
-            }
-            
-            
-            
         }
     }
 }

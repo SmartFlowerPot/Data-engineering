@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception e)
             {
-                return e.Message == Status.PlantNotFound ? NotFound(e.Message) : StatusCode(500, e.Message);
+                return e.Message == Status.DeviceNotFound ? NotFound(e.Message) : StatusCode(500, e.Message);
             }
         }
     }

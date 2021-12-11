@@ -21,7 +21,7 @@ namespace WebAPI.Persistence
             
             if (plant == null)
             {
-                throw new Exception(Status.PlantNotFound);
+                throw new Exception(Status.DeviceNotFound);
             }
             
             var measurements = plant.Measurements
@@ -42,7 +42,7 @@ namespace WebAPI.Persistence
             
             if (plant == null)
             {
-                throw new Exception(Status.PlantNotFound);
+                throw new Exception(Status.DeviceNotFound);
             }
             
             var measurement = plant.Measurements.LastOrDefault();

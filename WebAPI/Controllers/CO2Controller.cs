@@ -65,7 +65,7 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(message);
                 }
-                case Status.PlantNotFound:
+                case Status.DeviceNotFound:
                 {
                     return NotFound(message);
                 }

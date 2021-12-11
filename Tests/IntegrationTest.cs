@@ -11,10 +11,9 @@ namespace Tests
     public class IntegrationTest
     {
         protected readonly HttpClient TestClient;
-        protected string http = "http://localhost:5000";
-        protected string https = "https://localhost:5001";
-        
-        public IntegrationTest()
+        protected const string Https = "https://localhost:5001";
+
+        protected IntegrationTest()
         {
             var appFactory = new WebApplicationFactory<Startup>()
                 .WithWebHostBuilder(builder =>

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebAPI.Models;
-using WebAPI.Persistence;
-using WebAPI.Persistence.Interface;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,21 +15,27 @@ namespace Tests
     public class TemperatureControllerTest : IntegrationTest
     {
         private readonly ITestOutputHelper _testOutputHelper;
-        private Temperature _temperature;
+        private readonly MeasurementPersistence _persistence;
 
-        private const string validEui = "123465789";
-        private const string invalidEui = "00000000";
+        private const string ValidEui = "qwerty";
+        private const string InvalidEui = "00000000";
         
         public TemperatureControllerTest(ITestOutputHelper outputHelper)
         {
             _testOutputHelper = outputHelper;
+            _persistence = new MeasurementPersistence();
+        }
 
-            _temperature = new()
-            {
-                EUI = validEui,
-                TemperatureInDegrees = new decimal(23.32),
-                TimeStamp = DateTime.Now
-            };
+        [Fact]
+        public async Task PopulateDB()
+        {
+            await _persistence.PersistMeasurement();
+        }
+        
+        [Fact]
+        public async Task CleanUpDB()
+        {
+            await _persistence.DeleteMeasurement();
         }
 
         [Fact]
@@ -43,46 +50,81 @@ namespace Tests
         public async Task GetTemperature_InvalidEUITest()
         {
             //Arrange
-            await PersistTemperatureAsync();
+            await _persistence.DeleteMeasurement();
+            await _persistence.PersistMeasurement();
             
             //Act
-            HttpResponseMessage response = await TestClient.GetAsync($"{https}/temperature?eui={invalidEui}");
+            HttpResponseMessage response = await TestClient.GetAsync($"{Https}/temperature?eui={InvalidEui}");
             
             //Assert
             _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             
             //Clean up
-            await DeleteTemperatureAsync();
+            await _persistence.DeleteMeasurement();
         }
         
         [Fact]
         public async Task GetTemperature_ValidEUITest()
         {
             //Arrange
-            await PersistTemperatureAsync();
+            await _persistence.DeleteMeasurement();
+            await _persistence.PersistMeasurement();
             
             //Act
-            HttpResponseMessage response = await TestClient.GetAsync($"{https}/temperature?eui={validEui}");
+            var response = await TestClient.GetAsync($"{Https}/temperature?eui={ValidEui}");
+            var json = await response.Content.ReadAsStringAsync();
+            var temp = JsonSerializer.Deserialize<Temperature>(json, new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            
+            //Assert
+            _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            if (temp != null) Assert.Equal(20, temp.TemperatureInDegrees);
+
+            //Clean up
+            await _persistence.DeleteMeasurement();
+        }
+        [Fact]
+        public async Task GetTemperatureHistory()
+        {
+            //Arrange
+            await _persistence.DeleteMeasurement();
+            await _persistence.PersistMeasurement();
+            
+            //Measurement that is older than 7 days
+            var measurement = new Measurement()
+            {
+                CO2 = 999,
+                Temperature = 999,
+                Humidity = 999,
+                TimeStamp = DateTime.Now.AddDays(-8)
+            };
+            await _persistence.PersistMeasurement(measurement);
+            
+            //Act
+            var response = await TestClient.GetAsync($"{Https}/temperature/history?eui={ValidEui}");
+            var json = await response.Content.ReadAsStringAsync();
+            var temps = JsonSerializer.Deserialize<List<Temperature>>(json, new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
             
             //Assert
             _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             
+            //Assert if all measurements are no more than 7 days old
+            var dateTime = DateTime.Now.AddDays(-7);
+            foreach (var isAfter in temps.Select(t => DateTime.Compare(t.TimeStamp, dateTime)))
+            {
+                Assert.Equal(1,isAfter);
+            }
+            
             //Clean up
-            await DeleteTemperatureAsync();
-        }
-        
-        private async Task PersistTemperatureAsync()
-        {
-            ITemperatureRepo repo = new TemperatureRepo();
-            //await repo.PostTemperatureAsync(_temperature);
-        }
-
-        private async Task DeleteTemperatureAsync()
-        {
-            ITemperatureRepo repo = new TemperatureRepo();
-            //await repo.DeleteTemperatureAsync(validEui);
+            await _persistence.DeleteMeasurement();
         }
     }
 }
