@@ -13,6 +13,7 @@ namespace WebAPI.Gateway.Service
             measurement.Temperature = CreateTemperature(message).TemperatureInDegrees;
             measurement.Humidity = CreateHumidity(message).RelativeHumidity;
             measurement.CO2 = CreateCo2(message).CO2Level;
+            measurement.Light = CreateLight(message).LightLevel;
             measurement.TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(message.ts).DateTime;
             return measurement;
         }
@@ -64,5 +65,23 @@ namespace WebAPI.Gateway.Service
                 CO2Level = co2Level
             };
         }
+
+        public Light CreateLight(IoTMessage message)
+        {
+            String hexString = message.data;
+            
+            //Byte[5]&[6] which is the integer part
+            int numbaaa = int.Parse(hexString.Substring(10), System.Globalization.NumberStyles.HexNumber);
+            
+            Console.WriteLine($"NUMBAAAAAAA: {numbaaa}");
+
+            return new Light()
+            {
+                EUI = message.EUI,
+                TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(message.ts).DateTime,
+                LightLevel = numbaaa
+            };
+        }
+        
     }
 }

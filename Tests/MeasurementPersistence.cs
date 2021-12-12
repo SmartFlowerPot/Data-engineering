@@ -38,6 +38,7 @@ namespace Tests
             {
                 CO2 = 550,
                 Humidity = 40,
+                Light = 69,
                 Temperature = (decimal) 21.50,
                 TimeStamp = DateTime.Now
             };
@@ -46,6 +47,7 @@ namespace Tests
             {
                 CO2 = 626,
                 Humidity = 30,
+                Light = 34,
                 Temperature = (decimal) 18.80,
                 TimeStamp = DateTime.Now
             };
@@ -54,6 +56,7 @@ namespace Tests
             {
                 CO2 = 450,
                 Humidity = 55,
+                Light = 189,
                 Temperature = (decimal) 25,
                 TimeStamp = DateTime.Now
             };
@@ -62,6 +65,7 @@ namespace Tests
             {
                 CO2 = 700,
                 Humidity = 32,
+                Light = 234,
                 Temperature = (decimal) 23,
                 TimeStamp = DateTime.Now
             };
@@ -70,6 +74,7 @@ namespace Tests
             {
                 CO2 = 543,
                 Humidity = 34,
+                Light = 123,
                 Temperature = (decimal) 23.45,
                 TimeStamp = DateTime.Now
             };
@@ -78,6 +83,7 @@ namespace Tests
             {
                 CO2 = 420,
                 Humidity = 45,
+                Light = 12,
                 Temperature = (decimal) 20,
                 TimeStamp = DateTime.Now
             };

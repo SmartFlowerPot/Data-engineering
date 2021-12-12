@@ -12,7 +12,6 @@ namespace WebAPI.Models
         [StringLength(50)]
         public string Nickname { get; set; }
         [Key]
-        [StringLength(50)]
         public string EUI { get; set; }
         [NotMapped] 
         public int Age { get; set; }

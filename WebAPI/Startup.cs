@@ -44,6 +44,9 @@ namespace WebAPI
             services.AddScoped<ICO2Service, CO2Service>();
             services.AddScoped<ICO2Repo, CO2Repo>();
 
+            services.AddScoped<ILightService, LightService>();
+            services.AddScoped<ILightRepo, LightRepo>();
+
             services.AddScoped<ILoriotService, LoriotService>();
 
             services.AddScoped<IMeasurementService, MeasurementService>();
