@@ -4,7 +4,7 @@ using WebAPI.Controllers;
 namespace WebAPI.Services.Interface
 {
     public interface IWindowService
-    {
-        void ControlWindow(WindowController.WindowControl windowControl);
+    { 
+        Task ControlWindow(string windowControl, bool toOpen);
     }
 }

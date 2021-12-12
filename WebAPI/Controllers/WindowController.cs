@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Exceptions;
 using WebAPI.Services.Interface;
 
 namespace WebAPI.Controllers
@@ -17,16 +18,24 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost]
-        public void ControlWindow([FromBody] WindowControl control)
+        public async Task<ActionResult> ControlWindow([FromQuery] string eui, bool toOpen)
         {
-            _windowService.ControlWindow(control);
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                await _windowService.ControlWindow(eui, toOpen);
+                return Accepted();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return e.Message.Equals(Status.DeviceNotFound) ? NotFound(e.Message) : StatusCode(500, e.Message);
 
-        public class WindowControl
-        {
-            public string EUI { get; set; }
-            public DateTime TimeStamp { get; set; }
-            public bool OpenedClosed { get; set; }
+            }
+            
         }
     }
 }

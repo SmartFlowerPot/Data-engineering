@@ -54,7 +54,7 @@ namespace Tests
             await _persistence.PersistMeasurement();
             
             //Act
-            HttpResponseMessage response = await TestClient.GetAsync($"{Https}/temperature?eui={InvalidEui}");
+            var response = await TestClient.GetAsync($"{Https}/temperature?eui={InvalidEui}");
             
             //Assert
             _testOutputHelper.WriteLine("RESPONSE: "+response.Content.ReadAsStringAsync().Result);

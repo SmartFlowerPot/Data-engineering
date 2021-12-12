@@ -40,16 +40,16 @@ namespace WebAPI.Gateway
             _socket.Connect();
         }
         
-        public void SendDownLinkMessage(WindowController.WindowControl jsonTelegram)
+        public void SendDownLinkMessage(string eui, bool toOpen)
         {
-            string data = jsonTelegram.OpenedClosed
+            string data = toOpen
                 ? "01"
                 : "00";
 
             var message = new DownLinkMessage()
             {
                 cmd = "tx",
-                EUI = jsonTelegram.EUI,
+                EUI = eui,
                 port = 1,
                 confirmed = true,
                 data = data
