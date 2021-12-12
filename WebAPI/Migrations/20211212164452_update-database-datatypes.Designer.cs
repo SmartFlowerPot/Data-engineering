@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataAccess;
 
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(Database))]
-    partial class DatabaseModelSnapshot : ModelSnapshot
+    [Migration("20211212164452_update-database-datatypes")]
+    partial class updatedatabasedatatypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,13 +24,16 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.Account", b =>
                 {
                     b.Property<string>("Username")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Gender")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -62,9 +67,6 @@ namespace WebAPI.Migrations
                     b.Property<decimal>("Light")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("PlantEUI")
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<decimal>("Temperature")
                         .HasColumnType("decimal(18,2)");
 
@@ -73,22 +75,23 @@ namespace WebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlantEUI");
-
                     b.ToTable("Measurements");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Plant", b =>
                 {
                     b.Property<string>("EUI")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AccountUsername")
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Device")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Nickname")
                         .HasMaxLength(50)
@@ -101,13 +104,6 @@ namespace WebAPI.Migrations
                     b.ToTable("Plants");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.Measurement", b =>
-                {
-                    b.HasOne("WebAPI.Models.Plant", null)
-                        .WithMany("Measurements")
-                        .HasForeignKey("PlantEUI");
-                });
-
             modelBuilder.Entity("WebAPI.Models.Plant", b =>
                 {
                     b.HasOne("WebAPI.Models.Account", null)
@@ -118,11 +114,6 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.Account", b =>
                 {
                     b.Navigation("Plants");
-                });
-
-            modelBuilder.Entity("WebAPI.Models.Plant", b =>
-                {
-                    b.Navigation("Measurements");
                 });
 #pragma warning restore 612, 618
         }
