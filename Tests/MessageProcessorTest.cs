@@ -1,4 +1,5 @@
-﻿using WebAPI.Gateway.Model;
+﻿using System;
+using WebAPI.Gateway.Model;
 using WebAPI.Gateway.Service;
 using Xunit;
 using Xunit.Abstractions;
@@ -19,8 +20,9 @@ namespace Tests
             _testOutputHelper = testOutputHelper;
             _message = new IoTMessage
             {
-                EUI = "0004A30B00251001",
-                data = "17371a0226",
+                EUI = "18061c0226002f",
+                data = "182f1b02b00033",
+                //Random timestamp
                 ts = 1638792089900,
                 port = 1
             };
@@ -28,10 +30,12 @@ namespace Tests
             _message2 = new IoTMessage
             {
                 EUI = "0004A30B00251001",
-                data = "18562005d4",
+                data = "18061c02260185",
                 ts = 1638792089900,
                 port = 1
             };
+            
+            
         }
         
         [Fact]
@@ -40,18 +44,25 @@ namespace Tests
             var temp = _processor.CreateTemperature(_message);
             var humidity = _processor.CreateHumidity(_message);
             var co2 = _processor.CreateCo2(_message);
+            var light = _processor.CreateLight(_message);
             
             _testOutputHelper.WriteLine(temp.ToString());
             _testOutputHelper.WriteLine(humidity.ToString());
             _testOutputHelper.WriteLine(co2.ToString());
+            _testOutputHelper.WriteLine(light.ToString());
+
+            _testOutputHelper.WriteLine("-------------------");
             
             temp = _processor.CreateTemperature(_message2);
             humidity = _processor.CreateHumidity(_message2);
             co2 = _processor.CreateCo2(_message2);
+            light = _processor.CreateLight(_message2);
             
             _testOutputHelper.WriteLine(temp.ToString());
             _testOutputHelper.WriteLine(humidity.ToString());
             _testOutputHelper.WriteLine(co2.ToString());
+            _testOutputHelper.WriteLine(light.ToString());
+
         }
         
     }

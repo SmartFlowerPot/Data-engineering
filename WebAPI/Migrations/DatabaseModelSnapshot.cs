@@ -28,14 +28,17 @@ namespace WebAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Region")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Username");
 
@@ -53,6 +56,9 @@ namespace WebAPI.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Humidity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Light")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PlantEUI")
@@ -83,7 +89,8 @@ namespace WebAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nickname")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("EUI");
 
