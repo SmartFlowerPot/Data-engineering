@@ -7,10 +7,15 @@ namespace WebAPI.Models
     {
         [Key]
         public int Id { get; set; }
+        
         public DateTime TimeStamp { get; set; }
+        
         public decimal Temperature { get; set; }
+        
         public decimal Humidity { get; set; }
+        
         public decimal CO2 { get; set; }
+        
         public decimal Light { get; set; }
 
         public override string ToString()

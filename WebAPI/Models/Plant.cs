@@ -9,10 +9,14 @@ namespace WebAPI.Models
     public class Plant
     {
         public DateTime DOB { get; set; }
+
         [StringLength(50)]
         public string Nickname { get; set; }
+        
         [Key]
+        [StringLength(50)]
         public string EUI { get; set; }
+        
         [NotMapped] 
         public int Age { get; set; }
 
