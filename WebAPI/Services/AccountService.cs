@@ -22,7 +22,12 @@ namespace WebAPI.Services
 
         public async Task<Account> GetAccountAsync(string username)
         {
-            return await _accountRepo.GetAccountAsync(username);
+            var account = await _accountRepo.GetAccountAsync(username);
+            foreach (var plant in account.Plants)
+            {
+                plant.SetAge();
+            }
+            return account;
         }
 
         public async Task<Account> GetAccountAsync(string username, string password)
