@@ -18,11 +18,16 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> ControlWindow([FromQuery] string eui, bool toOpen)
+        public async Task<ActionResult> ControlWindow([FromQuery] string eui, int toOpen)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (toOpen != 1 && toOpen != 0)
+            {
+                return BadRequest("toOpen must be either 1 or 0");
             }
             try
             {
