@@ -19,6 +19,8 @@ namespace WebAPI.Models
         
         [NotMapped] 
         public int Age { get; set; }
+        
+        [StringLength(50)]
         public string PlantType { get; set; }
 
         [JsonIgnore]
