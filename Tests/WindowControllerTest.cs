@@ -21,7 +21,7 @@ namespace Tests
             _testOutputHelper = outputHelper;
             _persistence = new MeasurementPersistence();
         }
-
+        
         [Fact]
         public async Task ControlWindowOnValidDevice()
         {

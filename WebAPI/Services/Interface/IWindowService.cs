@@ -5,6 +5,6 @@ namespace WebAPI.Services.Interface
 {
     public interface IWindowService
     { 
-        Task ControlWindow(string windowControl, bool toOpen);
+        Task ControlWindow(string windowControl, int toOpen);
     }
 }

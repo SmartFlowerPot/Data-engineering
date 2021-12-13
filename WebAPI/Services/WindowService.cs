@@ -15,7 +15,7 @@ namespace WebAPI.Services
             _repo = plantRepo;
         }
 
-        public async Task ControlWindow(string eui, bool toOpen)
+        public async Task ControlWindow(string eui, int toOpen)
         {
             var plant = await _repo.GetPlantByDeviceAsync(eui);
             

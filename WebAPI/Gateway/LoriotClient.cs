@@ -40,12 +40,12 @@ namespace WebAPI.Gateway
             _socket.Connect();
         }
         
-        public void SendDownLinkMessage(string eui, bool toOpen)
+        public void SendDownLinkMessage(string eui, int toOpen)
         {
-            string data = toOpen
+            string data = toOpen == 1
                 ? "01"
                 : "00";
-
+            
             var message = new DownLinkMessage()
             {
                 cmd = "tx",
