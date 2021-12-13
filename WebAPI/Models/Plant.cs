@@ -19,6 +19,7 @@ namespace WebAPI.Models
         
         [NotMapped] 
         public int Age { get; set; }
+        public string PlantType { get; set; }
 
         [JsonIgnore]
         public IList<Measurement> Measurements { get; set; }
