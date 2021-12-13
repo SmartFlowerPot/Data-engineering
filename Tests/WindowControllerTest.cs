@@ -31,8 +31,8 @@ namespace Tests
             HttpContent content = new StringContent("", Encoding.UTF8, "application/json");
             
             //Act
-            var open = await TestClient.PostAsync($"{Https}/window?eui={ValidEui}&toOpen=true",content);
-            var close = await TestClient.PostAsync($"{Https}/window?eui={ValidEui}&toOpen=false",content);
+            var open = await TestClient.PostAsync($"{Https}/window?eui={ValidEui}&toOpen=1",content);
+            var close = await TestClient.PostAsync($"{Https}/window?eui={ValidEui}&toOpen=0",content);
             
             //Assert
             _testOutputHelper.WriteLine("OPEN REQUEST: "+open.StatusCode + " "+open.Content.ReadAsStringAsync().Result);
@@ -53,8 +53,8 @@ namespace Tests
             HttpContent content = new StringContent("", Encoding.UTF8, "application/json");
 
             //Act
-            var open = await TestClient.PostAsync($"{Https}/window?eui={InvalidEui}&toOpen=true",content);
-            var close = await TestClient.PostAsync($"{Https}/window?eui={InvalidEui}&toOpen=false",content);
+            var open = await TestClient.PostAsync($"{Https}/window?eui={InvalidEui}&toOpen=1",content);
+            var close = await TestClient.PostAsync($"{Https}/window?eui={InvalidEui}&toOpen=0",content);
             
             //Assert
             _testOutputHelper.WriteLine("OPEN REQUEST: "+open.StatusCode + " "+open.Content.ReadAsStringAsync().Result);
