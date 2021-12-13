@@ -21,7 +21,7 @@ namespace Tests
             _message = new IoTMessage
             {
                 EUI = "18061c0226002f",
-                data = "182f1b02b00033",
+                data = "17392602260037",
                 //Random timestamp
                 ts = 1638792089900,
                 port = 1
@@ -30,7 +30,7 @@ namespace Tests
             _message2 = new IoTMessage
             {
                 EUI = "0004A30B00251001",
-                data = "18061c02260185",
+                data = "17352802260037",
                 ts = 1638792089900,
                 port = 1
             };
