@@ -6,7 +6,9 @@ namespace WebAPI.Gateway.Persistence
 {
     public interface ILoriotRepo
     {
-        Task<Temperature> AddTemperatureAsync(Temperature temperature);
-        Task AddTemperatureAsync(List<Temperature> temperatures);
+        // Task AddTemperatureAsync(Temperature temperature);
+        // Task AddHumidityAsync(Humidity humidity);
+        // Task AddCo2Async(COTwo co2);
+        Task AddMeasurement(Measurement measurement, string eui);
     }
 }

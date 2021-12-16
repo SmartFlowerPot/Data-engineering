@@ -8,7 +8,9 @@ using Microsoft.OpenApi.Models;
 using WebAPI.Gateway;
 using WebAPI.Gateway.Service;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
 using WebAPI.Services;
+using WebAPI.Services.Interface;
 
 namespace WebAPI
 {
@@ -26,14 +28,31 @@ namespace WebAPI
         {
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebAPI", Version = "v1"}); });
-
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<ITemperatureService, TemperatureService>();
             
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAccountRepo, AccountRepo>();
+            
+            services.AddScoped<ITemperatureService, TemperatureService>();
             services.AddScoped<ITemperatureRepo, TemperatureRepo>();
+            
+            services.AddScoped<IPlantService, PlantService>();
+            services.AddScoped<IPlantRepo, PlantRepo>();
+            
+            services.AddScoped<IHumidityService, HumidityService>();
+            services.AddScoped<IHumidityRepo, HumidityRepo>();
+            
+            services.AddScoped<ICO2Service, CO2Service>();
+            services.AddScoped<ICO2Repo, CO2Repo>();
+
+            services.AddScoped<ILightService, LightService>();
+            services.AddScoped<ILightRepo, LightRepo>();
 
             services.AddScoped<ILoriotService, LoriotService>();
+
+            services.AddScoped<IMeasurementService, MeasurementService>();
+            services.AddScoped<IMeasurementRepo, MeasurementRepo>();
+
+            services.AddScoped<IWindowService, WindowService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

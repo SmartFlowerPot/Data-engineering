@@ -22,43 +22,111 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.Account", b =>
                 {
                     b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Gender")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Region")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Username");
 
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.Temperature", b =>
+            modelBuilder.Entity("WebAPI.Models.Measurement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Data")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("CO2")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("EUI")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Humidity")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TemperatureInDegrees")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("Temperature");
+                    b.Property<decimal>("Light")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("PlantEUI")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Temperature")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Ts")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Temperatures");
+                    b.HasIndex("PlantEUI");
+
+                    b.ToTable("Measurements");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Plant", b =>
+                {
+                    b.Property<string>("EUI")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("AccountUsername")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("DOB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nickname")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PlantType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("EUI");
+
+                    b.HasIndex("AccountUsername");
+
+                    b.ToTable("Plants");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Measurement", b =>
+                {
+                    b.HasOne("WebAPI.Models.Plant", null)
+                        .WithMany("Measurements")
+                        .HasForeignKey("PlantEUI");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Plant", b =>
+                {
+                    b.HasOne("WebAPI.Models.Account", null)
+                        .WithMany("Plants")
+                        .HasForeignKey("AccountUsername");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Account", b =>
+                {
+                    b.Navigation("Plants");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Plant", b =>
+                {
+                    b.Navigation("Measurements");
                 });
 #pragma warning restore 612, 618
         }

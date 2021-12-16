@@ -1,51 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.DataAccess;
+using WebAPI.Exceptions;
 using WebAPI.Models;
+using WebAPI.Persistence.Interface;
 
 namespace WebAPI.Persistence
 {
-    public class TemperatureRepo: ITemperatureRepo
+    public class TemperatureRepo : ITemperatureRepo
     {
-        public async Task<Temperature> GetTemperatureAsync()
+        
+        public async Task<Temperature> GetTemperatureAsync(string eui)
         {
-            try
+            await using var database = new Database();
+            var plant = await database.Plants.Include(p => p.Measurements)
+                .FirstOrDefaultAsync(p => p.EUI.Equals(eui));
+            if (plant == null)
             {
-                await using var database = new Database();
-                var t = await database.Temperatures.FirstOrDefaultAsync();
-                return t;
+                throw new Exception(Status.DeviceNotFound);
             }
-            catch (Exception e)
+            var measurement = plant.Measurements.LastOrDefault();
+            
+            if (measurement == null)
             {
-                Console.WriteLine(e);
+                throw new Exception(Status.MeasurementNotFound);
             }
-            return null;
-        }
+            
+            var temp = new Temperature()
+            {
+                Id = measurement.Id,
+                TemperatureInDegrees = measurement.Temperature,
+                EUI = eui,
+                TimeStamp = measurement.TimeStamp
+            };
 
-        public async Task<Temperature> AddTemperatureAsync(Temperature temperature)
-        {
-            try
-            {
-                await using var database = new Database();
-                await database.Temperatures.AddAsync(temperature);
-                await database.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            return temperature;
+            return temp;
             
         }
-
-        public async Task AddTemperatureAsync(List<Temperature> temperatures)
+        
+        public async Task<IList<Temperature>> GetListOfTemperaturesAsync(string eui)
         {
-            foreach (var item in temperatures)
+            DateTime dateTime = DateTime.Now.AddDays(-7);
+            await using var database = new Database();
+            var plant = await database.Plants.Include(p => p.Measurements)
+                .FirstOrDefaultAsync(p => p.EUI.Equals(eui));
+            
+            if (plant == null)
             {
-                await AddTemperatureAsync(item);
+                throw new Exception(Status.DeviceNotFound);
             }
+            
+            var measurements = plant.Measurements
+                .Where(m => DateTime.Compare(m.TimeStamp, dateTime) >= 0).ToList();
+
+            if (!measurements.Any())
+                throw new Exception(Status.MeasurementNotFound);
+            
+            return measurements.Select(m => new Temperature() {TemperatureInDegrees = m.Temperature, EUI = eui,
+                    TimeStamp = m.TimeStamp,Id = m.Id,}).ToList();
         }
     }
 }

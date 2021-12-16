@@ -1,11 +1,12 @@
-﻿using WebAPI.Gateway.Model;
+﻿using System.Threading.Tasks;
+using WebAPI.Gateway.Model;
 using WebAPI.Models;
 
 namespace WebAPI.Gateway.Service
 {
     public interface ILoriotService
     {
-        public void HandleMessage(IoTMessage message);
+        public Task HandleMessage(IoTMessage message);
         
     }
 }

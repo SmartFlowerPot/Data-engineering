@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Exceptions;
 using WebAPI.Models;
 using WebAPI.Services;
+using WebAPI.Services.Interface;
 
 namespace WebAPI.Controllers
 {
@@ -17,9 +20,8 @@ namespace WebAPI.Controllers
             _temperatureService = temperatureService;
         }
         
-
         [HttpGet]
-        public async Task<ActionResult<Temperature>> GetTemperatureAsync()
+        public async Task<ActionResult<Temperature>> GetLastTemperatureAsync([FromQuery] string eui)
         {
             if (!ModelState.IsValid)
             {
@@ -27,16 +29,48 @@ namespace WebAPI.Controllers
             }
             try
             {
-                Temperature t = await _temperatureService.GetTemperatureAsync();
+                var t = await _temperatureService.GetTemperatureAsync(eui);
                 return Ok(t);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return StatusCode(500, e.Message);
+                return HandleException(e.Message);
             }
         }
         
-        
+        [HttpGet]
+        [Route("history")]
+        public async Task<ActionResult<IList<Temperature>>> GetListOfTemperatures([FromQuery] string eui)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var t = await _temperatureService.GetListOfTemperaturesAsync(eui);
+                return Ok(t);
+            }
+            catch (Exception e)
+            {
+                return e.Message.Equals(Status.MeasurementNotFound) ? NotFound(e.Message) : StatusCode(500, e.Message);
+            }
+        }
+
+        private ActionResult<Temperature> HandleException(string message)
+        {
+            switch (message)
+            {
+                case Status.MeasurementNotFound:
+                {
+                    return NotFound(message);
+                }
+                case Status.DeviceNotFound:
+                {
+                    return NotFound(message);
+                }
+            }
+            return StatusCode(500, message);
+        }
     }
 }

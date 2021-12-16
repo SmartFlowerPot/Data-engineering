@@ -1,12 +1,11 @@
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using WebAPI.Models;
 using Xunit;
 using Xunit.Abstractions;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Tests
 {
@@ -32,14 +31,14 @@ namespace Tests
             await PostAccount();
     
             //Act
-            var responseMessage = await TestClient.GetAsync($"{https}/account/{_account.Username}");
+            var responseMessage = await TestClient.GetAsync($"{Https}/account/{_account.Username}");
             
             //Assert
             _testOutputHelper.WriteLine($"UNIT TESTS: {responseMessage.StatusCode} "+responseMessage.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
             
             // Clean Up
-            await TestClient.DeleteAsync(https + $"/account/{_account.Username}");
+            await TestClient.DeleteAsync(Https + $"/account/{_account.Username}");
         }
         
         [Fact]
@@ -49,7 +48,7 @@ namespace Tests
             await PostAccount();
     
             //Act
-            var responseMessage = await TestClient.GetAsync($"{https}/account/SlimShady");
+            var responseMessage = await TestClient.GetAsync($"{Https}/account/SlimShady");
             
             //Assert
             _testOutputHelper.WriteLine($"UNIT TESTS: {responseMessage.StatusCode} "+responseMessage.Content.ReadAsStringAsync().Result);
@@ -57,7 +56,7 @@ namespace Tests
 
             
             // Clean Up
-            await TestClient.DeleteAsync(https + $"/account/{_account.Username}");
+            await TestClient.DeleteAsync(Https + $"/account/{_account.Username}");
         }
         
         [Fact]
@@ -67,14 +66,14 @@ namespace Tests
             await PostAccount();
     
             //Act
-            var responseMessage = await TestClient.GetAsync($"{https}/account?username=AlanTuring&password=enigma");
+            var responseMessage = await TestClient.GetAsync($"{Https}/account?username=AlanTuring&password=enigma");
             
             //Assert
             _testOutputHelper.WriteLine($"UNIT TESTS: {responseMessage.StatusCode} "+responseMessage.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
             
             // Clean Up
-            await TestClient.DeleteAsync(https + $"/account/{_account.Username}");
+            await TestClient.DeleteAsync(Https + $"/account/{_account.Username}");
         }
         
         [Fact]
@@ -84,14 +83,14 @@ namespace Tests
             await PostAccount();
     
             //Act
-            var responseMessage = await TestClient.GetAsync($"{https}/account?username=Alan&password=enigma");
+            var responseMessage = await TestClient.GetAsync($"{Https}/account?username=Alan&password=enigma");
             
             //Assert
             _testOutputHelper.WriteLine($"UNIT TESTS: {responseMessage.StatusCode} "+responseMessage.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.NotFound, responseMessage.StatusCode);
             
             // Clean Up
-            await TestClient.DeleteAsync(https + $"/account/{_account.Username}");
+            await TestClient.DeleteAsync(Https + $"/account/{_account.Username}");
         }
         
         [Fact]
@@ -101,14 +100,14 @@ namespace Tests
             await PostAccount();
     
             //Act
-            var responseMessage = await TestClient.GetAsync($"{https}/account?username=AlanTuring&password=1234");
+            var responseMessage = await TestClient.GetAsync($"{Https}/account?username=AlanTuring&password=1234");
             
             //Assert
             _testOutputHelper.WriteLine($"UNIT TESTS: {responseMessage.StatusCode} "+responseMessage.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.BadRequest, responseMessage.StatusCode);
             
             // Clean Up
-            await TestClient.DeleteAsync(https + $"/account/{_account.Username}");
+            await TestClient.DeleteAsync(Https + $"/account/{_account.Username}");
         }
         
         [Fact]
@@ -123,7 +122,7 @@ namespace Tests
             Assert.Equal(HttpStatusCode.Created,responseMessage.StatusCode);
             
             // Clean Up
-            await TestClient.DeleteAsync(https + $"/account/{_account.Username}");
+            await TestClient.DeleteAsync(Https + $"/account/{_account.Username}");
         }
 
         private async Task<HttpResponseMessage> PostAccount()
@@ -131,7 +130,7 @@ namespace Tests
             string accountJson = JsonSerializer.Serialize(_account);
             HttpContent content = new StringContent(accountJson, Encoding.UTF8, "application/json");
             
-            HttpResponseMessage responseMessage = await TestClient.PostAsync(https + "/account", content);
+            HttpResponseMessage responseMessage = await TestClient.PostAsync(Https + "/account", content);
             return responseMessage;
         }
 
@@ -144,14 +143,14 @@ namespace Tests
             HttpContent content = new StringContent(accountJson, Encoding.UTF8, "application/json");
             
             // Act
-            var responseMessage= await TestClient.PostAsync(https + "/account", content);
+            var responseMessage= await TestClient.PostAsync(Https + "/account", content);
             _testOutputHelper.WriteLine($"UNIT TESTS: {responseMessage.StatusCode} "+responseMessage.Content.ReadAsStringAsync().Result);
 
             // Assert
             Assert.Equal(HttpStatusCode.Conflict, responseMessage.StatusCode);
             
             //Clean up
-            await TestClient.DeleteAsync(https + $"/account/{_account.Username}");
+            await TestClient.DeleteAsync(Https + $"/account/{_account.Username}");
         }
         
         [Fact]
@@ -161,7 +160,7 @@ namespace Tests
             await PostAccount();
     
             //Act
-            var responseMessage = await TestClient.DeleteAsync($"{https}/account/{_account.Username}");
+            var responseMessage = await TestClient.DeleteAsync($"{Https}/account/{_account.Username}");
             
             //Assert
             _testOutputHelper.WriteLine($"UNIT TESTS: {responseMessage.StatusCode} "+responseMessage.Content.ReadAsStringAsync().Result);
@@ -175,14 +174,14 @@ namespace Tests
             await PostAccount();
     
             //Act
-            var responseMessage = await TestClient.GetAsync($"{https}/account/SlimShady");
+            var responseMessage = await TestClient.GetAsync($"{Https}/account/SlimShady");
             
             //Assert
             _testOutputHelper.WriteLine($"UNIT TESTS: {responseMessage.StatusCode} "+responseMessage.Content.ReadAsStringAsync().Result);
             Assert.Equal(HttpStatusCode.NotFound, responseMessage.StatusCode);
             
             // Clean Up
-            await TestClient.DeleteAsync(https + $"/account/{_account.Username}");
+            await TestClient.DeleteAsync(Https + $"/account/{_account.Username}");
         }
     }
 }

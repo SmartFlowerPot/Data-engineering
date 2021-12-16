@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using WebAPI.Models;
 using WebAPI.Persistence;
+using WebAPI.Persistence.Interface;
+using WebAPI.Services.Interface;
 
 namespace WebAPI.Services
 {
@@ -13,24 +15,29 @@ namespace WebAPI.Services
             _accountRepo = accountRepo;
         }
 
-        public Task<Account> PostAccountAsync(Account account)
+        public async Task<Account> PostAccountAsync(Account account)
         {
-            return _accountRepo.PostAccountAsync(account);
+            return await _accountRepo.PostAccountAsync(account);
         }
 
-        public Task<Account> GetAccountAsync(string username)
+        public async Task<Account> GetAccountAsync(string username)
         {
-            return _accountRepo.GetAccountAsync(username);
+            var account = await _accountRepo.GetAccountAsync(username);
+            foreach (var plant in account.Plants)
+            {
+                plant.SetAge();
+            }
+            return account;
         }
 
-        public Task<Account> GetAccountAsync(string username, string password)
+        public async Task<Account> GetAccountAsync(string username, string password)
         {
-            return _accountRepo.GetAccountAsync(username, password);
+            return await _accountRepo.GetAccountAsync(username, password);
         }
 
-        public Task<Account> DeleteAccountAsync(string username)
+        public async Task DeleteAccountAsync(string username)
         {
-            return _accountRepo.DeleteAccountAsync(username);
+            await _accountRepo.DeleteAccountAsync(username);
         }
     }
 }

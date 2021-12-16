@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebAPI.Gateway.Model;
 using WebAPI.Gateway.Persistence;
 using WebAPI.Models;
@@ -10,79 +11,35 @@ namespace WebAPI.Gateway.Service
     public class LoriotService : ILoriotService
     {
        private readonly ILoriotRepo _loriotRepo;
+       private MessageProcessor _processor;
        
         
         public LoriotService()
         {
             _loriotRepo = new LoriotRepo();
-
+            _processor = new MessageProcessor();
         }
         //Handle message switches through different cmds and based on the port number creates a proper measurement
         //Port number 1 => Temperature reading
         //TODO Method to process the data to a proper value, need to agree with the IoT team on the format
-        public void HandleMessage(IoTMessage message)
+        public async Task HandleMessage(IoTMessage message)
         {
-            List<Temperature> temperatures = new List<Temperature>();
             switch (message.cmd)
             {
                 case "rx":
                 {
-                    if (message.port == 1)
-                    {
-                        var temp = CreateTemperature(message);
-                        temperatures.Add(temp);
-                        Console.WriteLine($"HANDLE MESSAGE => {temp}");
-                        //_temperatureRepo.AddTemperatureAsync(CreateTemperature(message));
-                    }
+                    // var temp = _processor.CreateTemperature(message);
+                    // var humidity = _processor.CreateHumidity(message);
+                    // var co2 = _processor.CreateCo2(message);
+                    //
+                    // await _loriotRepo.AddTemperatureAsync(temp);
+                    // await _loriotRepo.AddHumidityAsync(humidity);
+                    // await _loriotRepo.AddCo2Async(co2);
+                    var measurement = _processor.CreateMeasurement(message);
+                    await _loriotRepo.AddMeasurement(measurement, message.EUI);
                     break;
                 }
-                case "cq":
-                {
-                    foreach (var msg in message.cache)
-                    {
-                        if (msg.port == 1)
-                        {
-                            temperatures.Add(CreateTemperature(msg));
-                            // _temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
-                        }
-                    }
-                    break;
-                }
-                // case "gw":
-                // {
-                //     if (message.port == 1)
-                //     {
-                //         temperatures.Add(CreateTemperature(message));
-                //         //_temperatureRepo.AddTemperatureAsync(CreateTemperature(msg));
-                //     }
-                //     break; 
-                // }
             }
-
-            _loriotRepo.AddTemperatureAsync(temperatures);
-        }
-        
-        private Temperature CreateTemperature(IoTMessage message)
-        {
-            // DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            // DateTime timeStamp = start.AddMilliseconds(message.ts).ToLocalTime();
-
-            String hexString = message.data;
-            int dec = int.Parse(hexString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            int point = int.Parse(hexString.Substring(2), System.Globalization.NumberStyles.HexNumber);
-            Console.WriteLine($"Decimal: {dec} Point: {point}");
-            decimal number = (decimal) (dec + (point / 100.0));
-            Console.WriteLine($"NUMBAAAAAAA: {number}");
-            
-            return new()
-            {
-                // DateTime = message.ts.ToString(),
-                Ts = message.ts,
-                TemperatureInDegrees = number,
-                TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(message.ts).DateTime,
-                Data = message.data,
-                EUI = message.EUI
-            }; 
         }
     }
 }
